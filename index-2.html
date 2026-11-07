@@ -1,0 +1,2123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://js.puter.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https: blob:; worker-src 'self' blob:; frame-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZTC AI V24 · REDLINE INFINITY</title>
+<script defer src="https://js.puter.com/v2/"></script>
+<style>
+:root{
+  --bg:#060607;--bg2:#0b0b0e;--surf:#0f0f13;--surf2:#16161c;--line:#2a1b21;--line2:#3d2630;
+  --red:#ff2d4f;--red2:#ff6b82;--red3:#8e1027;--ok:#3ddc97;--warn:#f7b955;--bad:#ff5c6c;
+  --text:#f3eff1;--muted:#9a8b92;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;min-height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:14px/1.55 var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+@supports (height:100dvh){html,body{height:100dvh}}
+@supports (height:100svh){body{min-height:100svh}}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 480px at 88% -8%,rgba(255,45,79,.15),transparent 62%),
+    linear-gradient(rgba(255,45,79,.04) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg,rgba(255,45,79,.04) 1px,transparent 1px) 0 0/48px 48px}
+#app{position:relative;z-index:1;display:flex;height:100%;min-height:0;min-width:0;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:transparent;border:1px solid var(--line2);border-radius:8px;padding:6px 11px;font-size:12px;letter-spacing:.02em;transition:border-color .15s,color .15s,background .15s}
+button:hover:not(:disabled){border-color:var(--red);color:#fff;background:rgba(255,45,79,.08)}
+button:disabled{opacity:.45;cursor:default}
+button.primary{background:linear-gradient(135deg,#ff2d4f,#9b1029);border-color:#ff5c73;color:#fff;font-weight:600;position:relative;overflow:hidden;min-width:88px}
+button.primary:hover:not(:disabled){background:linear-gradient(135deg,#ff4a66,#b3142f);color:#fff}
+button.primary::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:translateX(-130%);animation:sheen 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{0%{transform:translateX(-130%)}60%,100%{transform:translateX(330%)}}
+button.danger:hover:not(:disabled){border-color:var(--bad);color:var(--bad);background:rgba(255,92,108,.08)}
+input[type=text],input[type=password],input[type=url],select,textarea{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--line2);border-radius:4px;padding:0 4px;color:var(--muted);margin-left:4px}
+
+/* sidebar */
+#side{width:282px;min-width:282px;display:flex;flex-direction:column;background:linear-gradient(180deg,#0e0e12,#08080b);border-right:1px solid var(--line);position:relative}
+#side::after{content:"";position:absolute;top:0;bottom:0;right:-1px;width:1px;background:linear-gradient(transparent,var(--red),transparent);opacity:.45}
+.brand{display:flex;align-items:center;gap:11px;padding:16px 16px 14px;border-bottom:1px solid var(--line)}
+.logo{width:36px;height:36px;position:relative;flex:0 0 auto}
+.logo svg{width:100%;height:100%;display:block}
+.logo .ring{position:absolute;inset:-4px;border-radius:50%;border:1px solid transparent;border-top-color:var(--red);border-right-color:rgba(255,45,79,.3);animation:spin 4.5s linear infinite;will-change:transform}
+@keyframes spin{to{transform:rotate(360deg)}}
+.brand b{display:block;font-size:15px;letter-spacing:.22em;font-weight:800}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-top:1px}
+.sec{padding:12px 14px 6px;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.sec button{padding:0 8px;font-size:15px;line-height:20px}
+.list{overflow:auto;padding:0 8px}
+#chats{flex:1;min-height:0}
+.item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;color:#d9d1d5;font-size:13px}
+.item:hover{background:var(--surf2)}
+.item.on{background:linear-gradient(90deg,rgba(255,45,79,.22),rgba(255,45,79,.03));box-shadow:inset 2px 0 0 var(--red);color:#fff}
+.item span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .x{opacity:0;border:0;padding:0 4px;color:var(--muted);font-size:15px;line-height:1;background:none}
+.item:hover .x{opacity:1}
+.item .x:hover{color:var(--bad);background:none}
+.foot{padding:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#filter{font-size:12px;padding:6px 9px}
+
+/* main */
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:rgba(9,9,12,.96);position:relative;flex-wrap:wrap}
+header::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:40%;background:linear-gradient(90deg,transparent,var(--red),transparent);transform:translateX(-100%);animation:scan 3.8s linear infinite;pointer-events:none}
+@keyframes scan{to{transform:translateX(260%)}}
+.seg{display:flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:6px 12px;color:var(--muted);background:transparent}
+.seg button.on{background:linear-gradient(180deg,rgba(255,45,79,.3),rgba(255,45,79,.1));color:#fff;box-shadow:inset 0 -2px 0 var(--red)}
+.pill{font-family:var(--mono);font-size:11px;padding:4px 10px;border:1px solid var(--line2);border-radius:999px;color:var(--muted);white-space:nowrap;max-width:320px;overflow:hidden;text-overflow:ellipsis}
+.pill:empty{display:none}
+.pill.run{color:var(--red2);border-color:rgba(255,45,79,.5)}
+.pill.ok{color:var(--ok);border-color:rgba(61,220,151,.4)}
+.pill.bad{color:var(--bad);border-color:rgba(255,92,108,.5)}
+.pill.run::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);margin-right:7px;vertical-align:1px;animation:blink 1s ease-in-out infinite}
+@keyframes blink{50%{opacity:.2}}
+.title{flex:1;min-width:80px;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+#messages{flex:1;overflow:auto;padding:22px 20px 12px;display:flex;flex-direction:column;gap:14px;overscroll-behavior:contain}
+.msg{width:fit-content;max-width:900px;min-width:0;padding:12px 15px;border-radius:12px;border:1px solid var(--line);background:var(--surf);position:relative;word-break:break-word;content-visibility:auto;contain-intrinsic-size:auto 140px;contain:layout style;animation:in .26s ease-out both}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.user{align-self:flex-end;max-width:740px;white-space:pre-wrap;background:linear-gradient(135deg,rgba(255,45,79,.2),rgba(40,10,18,.75));border-color:rgba(255,45,79,.36)}
+.msg.assistant{align-self:flex-start;width:100%;max-width:920px}
+.msg.error{align-self:flex-start;white-space:pre-wrap;background:#170a0d;border-color:rgba(255,92,108,.45);color:#ffb3bb}
+.msg.streaming{border-color:rgba(255,45,79,.5)}
+.msg.streaming::before{content:"";position:absolute;left:-1px;top:10px;bottom:10px;width:2px;background:var(--red);border-radius:2px;animation:blink 1s ease-in-out infinite}
+.msg .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.msg .acts{display:flex;gap:4px;margin-top:8px;opacity:0;transition:opacity .15s}
+.msg:hover .acts{opacity:1}
+.msg .acts button{font-size:10px;padding:2px 8px;border-color:var(--line)}
+.tag{font-family:var(--mono);font-size:10px;color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:2px 9px;text-decoration:none}
+.tag.v-pass{color:var(--ok);border-color:rgba(61,220,151,.45)}
+.tag.v-warn{color:var(--warn);border-color:rgba(247,185,85,.45)}
+.tag.v-fail{color:var(--bad);border-color:rgba(255,92,108,.55)}
+.body{white-space:pre-wrap}
+.md{white-space:normal}
+.md p{margin:.5em 0}
+.md h3,.md h4,.md h5{margin:.9em 0 .35em;color:#ffc4ce;letter-spacing:.02em}
+.md h3{font-size:16px}.md h4{font-size:14.5px}.md h5{font-size:13.5px}
+.md ul{margin:.45em 0;padding-left:1.25em}
+.md li{margin:.25em 0}
+.md li::marker{color:var(--red)}
+.md code{font-family:var(--mono);font-size:12px;background:#150a0e;border:1px solid var(--line2);border-radius:4px;padding:1px 5px;color:#ff9aa8}
+.md strong{color:#fff}
+.md em{color:#ffd4da}
+.code{margin:10px 0;border:1px solid var(--line2);border-radius:9px;overflow:hidden;background:#08080a}
+.codebar{display:flex;align-items:center;gap:6px;padding:5px 8px 5px 12px;background:#0e0e12;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px}
+.codebar .lang{flex:1;color:var(--red2);text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+.codebar button{padding:2px 8px;font-size:10px}
+.code textarea{display:block;width:100%;border:0;border-radius:0;background:#08080a;padding:10px 12px;font-family:var(--mono);font-size:12.5px;line-height:1.55;resize:vertical;outline:none}
+.runout{margin:0;padding:8px 12px;font-family:var(--mono);font-size:11.5px;color:#c9d2d8;background:#050506;border-top:1px solid var(--line);white-space:pre-wrap;max-height:220px;overflow:auto}
+.pipe{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.stage{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-radius:8px;padding:4px 9px;color:var(--muted);display:inline-flex;gap:7px;align-items:center;background:#0b0b0f}
+.stage i{width:7px;height:7px;border-radius:50%;background:#3a2a30;display:inline-block}
+.stage.done{color:#e8e1e5}.stage.done i{background:var(--ok)}
+.stage.run{border-color:rgba(255,45,79,.6);color:#fff}.stage.run i{background:var(--red);animation:pulse 1s ease-in-out infinite}
+.stage.fail{color:var(--bad)}.stage.fail i{background:var(--bad)}
+.stage .vd{color:var(--red2)}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
+details.trace{margin:0 0 10px;border:1px solid var(--line);border-radius:9px;padding:6px 11px;background:#09090c}
+details.trace summary{cursor:pointer;color:var(--muted);font-size:11px;font-family:var(--mono);letter-spacing:.05em}
+.tstep{margin:9px 0;font-size:12px}
+.tstep .tn{color:#fff;font-weight:600;margin-right:9px}
+.tstep .tr{color:var(--muted);font-family:var(--mono);font-size:11px;margin-right:9px}
+.tstep .ts{color:var(--red2);font-family:var(--mono);font-size:11px}
+.tstep pre{margin:5px 0 0;font-family:var(--mono);font-size:11px;color:#a2abb2;white-space:pre-wrap;max-height:96px;overflow:auto}
+
+.tbl{overflow:auto;margin:8px 0}
+/* composer */
+#composer{border-top:1px solid var(--line);background:rgba(9,9,12,.97);padding:10px 18px 12px}
+.inwrap{border-radius:12px;padding:1px;background:var(--line2)}
+.inwrap:focus-within{background:linear-gradient(90deg,var(--red3),var(--red),var(--red3))}
+#input{display:block;width:100%;resize:none;border-radius:11px;background:#0a0a0d;border:0;padding:11px 13px;min-height:60px;max-height:200px;outline:none;font-size:14px}
+.crow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.crow select{width:auto;padding:5px 8px;font-size:12px}
+.chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--red)}
+.sp{flex:1}
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.fchip{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-radius:7px;padding:3px 8px;display:inline-flex;gap:6px;align-items:center;background:#0c0c10}
+.fchip button{padding:0 4px;border:0;font-size:13px;line-height:1}
+
+/* modals and palette */
+#overlay{position:fixed;inset:0;background:rgba(2,2,4,.72);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{width:min(840px,100%);max-height:88vh;overflow:auto;background:#0d0d11;border:1px solid var(--line2);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.7);padding:18px 20px;animation:in .2s ease-out both}
+.modal h3{margin:0 0 14px;font-size:15px;letter-spacing:.08em;display:flex;justify-content:space-between;align-items:center;text-transform:uppercase}
+.modal h4{margin:18px 0 8px;font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:10.5px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:500;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+td.mono,.mono{font-family:var(--mono)}
+#palette{position:fixed;inset:0;background:rgba(2,2,4,.7);z-index:55;display:flex;justify-content:center;align-items:flex-start;padding-top:12vh}
+.pal-box{width:min(560px,94vw);background:#0d0d11;border:1px solid var(--line2);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7);animation:in .18s ease-out both}
+#palInput{width:100%;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#0b0b0e;padding:14px 16px;font-size:14px}
+.pal-list{max-height:340px;overflow:auto}
+.pal-item{padding:10px 16px;cursor:pointer;font-size:13px}
+.pal-item.sel{background:linear-gradient(90deg,rgba(255,45,79,.26),rgba(255,45,79,.03))}
+.load-older{align-self:center;margin:2px auto 10px;color:var(--red2);border-style:dashed;background:rgba(255,45,79,.04)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#16090d;border:1px solid var(--red);padding:9px 14px;border-radius:9px;font-size:12px;z-index:60;max-width:90vw;animation:in .2s ease-out both}
+
+#menuBtn{display:none}
+@media(max-width:820px){#menuBtn{display:inline-block}#side{position:fixed;left:0;top:0;bottom:0;z-index:40;width:84vw;min-width:0;transform:translateX(-104%);transition:transform .22s ease;box-shadow:12px 0 40px rgba(0,0,0,.6)}#side.open{transform:none}header{padding:8px 10px}#messages{padding:14px 10px}#composer{padding:9px 10px}.msg{max-width:100%}.grid2{grid-template-columns:1fr}}
+@media(max-width:1024px){#side{width:250px;min-width:250px}#messages{padding-left:14px;padding-right:14px}}
+@media(max-width:820px){#app{height:100%;min-height:0}#side{width:min(84vw,330px)}main{min-width:0}header{gap:6px}header .title{min-width:60px}#messages{min-height:0}.msg{max-width:100%}.msg.assistant{width:100%}#composer{padding-bottom:max(9px,env(safe-area-inset-bottom))}}
+@media(max-width:560px){header{padding:7px 8px;gap:5px}header button{padding:6px 8px;font-size:11px}.seg button{padding:6px 8px;font-size:11px}.pill{max-width:45vw;font-size:10px}#messages{padding:10px 8px;gap:10px}.msg{padding:10px 11px;border-radius:10px}.msg .acts{opacity:1;flex-wrap:wrap}.toolbar{gap:5px}.toolbar button{padding:6px 8px;font-size:11px}.dd-btn{min-width:110px;padding:6px 8px;font-size:11px}#input{font-size:16px}.foot{padding:8px;gap:5px}#wm{padding-bottom:max(8px,env(safe-area-inset-bottom))}.modal{padding:14px;max-height:92dvh}.grid2{grid-template-columns:1fr}}
+@media(hover:none){.msg .acts{opacity:1}.item .x{opacity:.8}}
+.low-power *, .low-power *::before, .low-power *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+.low-power body::before{background:radial-gradient(700px 360px at 88% -8%,rgba(255,45,79,.10),transparent 62%)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ===== v17 upgrade: dropdown, switches, keys panel, watermark, motion ===== */
+.msg{content-visibility:auto;contain-intrinsic-size:auto 140px}
+.msg.fresh{animation:in .28s ease-out both}
+.msg.error .acts.show{opacity:1}
+button.sm{padding:4px 11px;font-size:11px}
+.tag.mode{color:var(--red2);border-color:rgba(255,45,79,.42)}
+.gen-img{width:100%;max-width:640px;border-radius:10px;border:1px solid var(--line2);display:block}
+.gen-link{font-size:12px;color:var(--red2);display:inline-block;margin-top:8px}
+.dd{position:relative;display:inline-block}
+.dd-btn{min-width:132px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 12px;border-radius:9px;background:linear-gradient(180deg,#15151b,#0c0c10);border:1px solid var(--line2);font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:#fff}
+.dd-btn::after{content:"";width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--red2);transition:transform .2s}
+.dd.open .dd-btn{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,45,79,.14)}
+.dd.open .dd-btn::after{transform:rotate(180deg)}
+.dd-menu{position:absolute;bottom:calc(100% + 8px);left:0;min-width:100%;background:#0d0d12;border:1px solid var(--line2);border-radius:11px;padding:5px;box-shadow:0 18px 50px rgba(0,0,0,.75);z-index:30;animation:ddIn .16s ease-out both}
+.dd-menu[hidden]{display:none!important}
+@keyframes ddIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.dd-item{padding:8px 12px;border-radius:7px;font-family:var(--mono);font-size:12px;cursor:pointer;color:#d9d1d5;white-space:nowrap}
+.dd-item:hover{background:rgba(255,45,79,.12);color:#fff}
+.dd-item.on{color:#fff;background:linear-gradient(90deg,rgba(255,45,79,.3),rgba(255,45,79,.05));box-shadow:inset 2px 0 0 var(--red)}
+.chk input[type=checkbox]{appearance:none;-webkit-appearance:none;width:34px;height:18px;border-radius:999px;background:#1a1a20;border:1px solid var(--line2);position:relative;cursor:pointer;transition:background .18s,border-color .18s;margin:0;flex:0 0 auto}
+.chk input[type=checkbox]::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#7b6a71;transition:transform .18s,background .18s}
+.chk input[type=checkbox]:checked{background:linear-gradient(90deg,var(--red3),var(--red));border-color:var(--red)}
+.chk input[type=checkbox]:checked::after{transform:translateX(16px);background:#fff}
+.keylist{display:grid;gap:8px}
+.keyrow{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#0b0b0f}
+.keyhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:13px}
+.kstat{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.kstat.set{color:var(--ok)}
+.keyinp{display:grid;grid-template-columns:1fr auto auto;gap:6px}
+.keyinp input{padding:7px 9px}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 4px}
+.pill.mode-pill{color:#ffc4ce}
+#wm{padding:8px 12px 10px;text-align:center;font-size:11px;letter-spacing:.14em;color:#7d6f76;border-top:1px solid var(--line);background:#07070a;flex:0 0 auto}
+#wm b{font-weight:900;letter-spacing:.18em;background:linear-gradient(90deg,#ff2d4f,#ffd0d7,#ff2d4f);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 3.6s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+.modal .muted{color:var(--muted);font-size:12px}
+@media(max-width:820px){.keyinp{grid-template-columns:1fr}}
+
+/* ===== v18 upgrade ===== */
+button{transition:transform .12s,border-color .15s,color .15s,background .15s,box-shadow .15s}
+button:hover:not(:disabled){box-shadow:0 0 0 3px rgba(255,45,79,.1)}
+button:active:not(:disabled){transform:scale(.97)}
+.msg.assistant{position:relative}
+.msg.assistant::after{content:"";position:absolute;right:9px;bottom:9px;width:12px;height:12px;border-right:1px solid rgba(255,45,79,.55);border-bottom:1px solid rgba(255,45,79,.55);pointer-events:none}
+.msg.assistant:hover{border-color:rgba(255,45,79,.32)}
+.msg.assistant.streaming::after{animation:blink 1s steps(2) infinite}
+.gen-img.broken{opacity:.4;min-height:120px}
+.logo{filter:drop-shadow(0 0 10px rgba(255,45,79,.45))}
+.seg button.on{box-shadow:inset 0 -2px 0 var(--red),0 0 16px rgba(255,45,79,.18)}
+.item:active{transform:scale(.99)}
+.dd-btn:hover{border-color:var(--red)}
+button.primary:active:not(:disabled){transform:scale(.98)}
+
+
+/* ============================================================
+   V22 REDLINE DESIGN SYSTEM — V14 visual language adapted to V21 DOM
+   Visual-only layer: keeps existing markup, controls and app behavior.
+   ============================================================ */
+:root{
+  --bg:#07080b;--bg2:#0b0c10;--surf:#101116;--surf2:#171920;
+  --line:rgba(255,70,96,.16);--line2:rgba(255,91,115,.30);
+  --red:#ff304f;--red2:#ff7186;--red3:#a31330;
+  --text:#f7f1f3;--muted:#a1939a;
+  --glow:rgba(255,48,79,.24);
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(ellipse 68% 38% at 76% -12%,rgba(255,48,79,.16),transparent 68%),
+    radial-gradient(ellipse 42% 36% at -12% 100%,rgba(124,16,42,.12),transparent 72%),
+    linear-gradient(135deg,#07080b 0%,#0b0c11 54%,#10090d 100%);
+}
+body::before{
+  opacity:.72;
+  background:
+    radial-gradient(700px 420px at 78% 0%,rgba(255,48,79,.10),transparent 68%),
+    linear-gradient(rgba(255,65,92,.028) 1px,transparent 1px) 0 0/44px 44px,
+    linear-gradient(90deg,rgba(255,65,92,.028) 1px,transparent 1px) 0 0/44px 44px;
+  mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.62) 70%,transparent 100%);
+}
+#app{isolation:isolate}
+#side{
+  background:linear-gradient(180deg,rgba(18,18,24,.97),rgba(8,8,12,.98));
+  border-right:1px solid rgba(255,64,91,.22);
+  box-shadow:12px 0 44px rgba(0,0,0,.22);
+  backdrop-filter:blur(18px);
+}
+#side::after{width:1px;opacity:.7;box-shadow:0 0 14px rgba(255,48,79,.48)}
+.brand{
+  padding:19px 17px 16px;
+  background:linear-gradient(110deg,rgba(255,48,79,.09),transparent 72%);
+  border-bottom-color:rgba(255,64,91,.18);
+}
+.logo{filter:drop-shadow(0 0 12px rgba(255,48,79,.42))}
+.logo .ring{inset:-5px;border-top-color:#ff405f;border-right-color:rgba(255,113,134,.45);box-shadow:0 0 13px rgba(255,48,79,.12)}
+.brand b{font-size:16px;letter-spacing:.25em;text-shadow:0 0 18px rgba(255,48,79,.2)}
+.brand small{letter-spacing:.19em;color:#b79ca5}
+.sec{padding-top:15px;color:#b19ca4;letter-spacing:.2em}
+.sec button{width:26px;height:24px;border:1px solid rgba(255,77,102,.24);border-radius:7px;color:#ff9aaa;background:rgba(255,48,79,.06)}
+.item{margin:2px 3px;padding:9px 11px;border:1px solid transparent;transition:background .18s,border-color .18s,transform .18s,box-shadow .18s}
+.item:hover{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.045);transform:translateX(2px)}
+.item.on{background:linear-gradient(100deg,rgba(255,48,79,.19),rgba(255,48,79,.035));border-color:rgba(255,70,96,.14);box-shadow:inset 2px 0 0 var(--red),0 5px 18px rgba(0,0,0,.12)}
+.foot{background:rgba(255,255,255,.012);border-top-color:rgba(255,64,91,.16);padding:12px}
+.foot button{min-height:34px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));border-color:rgba(255,91,115,.22)}
+#filter{background:rgba(5,6,9,.72);border-color:rgba(255,91,115,.20);border-radius:9px;padding:8px 10px}
+main{background:transparent;min-width:0}
+header{
+  min-height:58px;padding:11px 17px;
+  background:rgba(11,11,15,.84);
+  border-bottom:1px solid rgba(255,65,92,.19);
+  box-shadow:0 8px 34px rgba(0,0,0,.18);
+  backdrop-filter:blur(18px);
+}
+header::after{height:1px;width:38%;background:linear-gradient(90deg,transparent,rgba(255,67,96,.9),transparent);filter:drop-shadow(0 0 5px rgba(255,48,79,.5))}
+.seg{border-color:rgba(255,83,107,.25);background:rgba(5,6,9,.48);padding:2px;border-radius:10px}
+.seg button{border-radius:7px;padding:7px 12px;transition:all .18s}
+.seg button.on{background:linear-gradient(180deg,rgba(255,48,79,.28),rgba(255,48,79,.09));box-shadow:inset 0 -2px 0 var(--red),0 0 17px rgba(255,48,79,.13);color:#fff}
+.pill{background:rgba(255,255,255,.025);border-color:rgba(255,85,108,.22);padding:5px 11px}
+.pill.run{box-shadow:0 0 15px rgba(255,48,79,.10)}
+.title{color:#b9aab0;letter-spacing:.025em}
+#messages{
+  padding:25px clamp(12px,2.5vw,30px) 18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.008),transparent 25%);
+  scrollbar-width:thin;scrollbar-color:rgba(255,70,96,.35) transparent;
+}
+#messages::-webkit-scrollbar,.list::-webkit-scrollbar,.modal::-webkit-scrollbar{width:7px}
+#messages::-webkit-scrollbar-thumb,.list::-webkit-scrollbar-thumb,.modal::-webkit-scrollbar-thumb{background:rgba(255,70,96,.28);border-radius:99px}
+.msg{
+  border-color:rgba(255,77,103,.16);border-radius:14px;
+  background:linear-gradient(145deg,rgba(20,20,26,.96),rgba(12,12,17,.96));
+  box-shadow:0 10px 32px rgba(0,0,0,.16);
+}
+.msg.user{
+  background:linear-gradient(135deg,rgba(111,15,37,.46),rgba(32,11,19,.94));
+  border-color:rgba(255,70,96,.34);
+  box-shadow:0 8px 28px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.035);
+}
+.msg.assistant{max-width:960px;border-color:rgba(255,77,103,.19)}
+.msg.assistant:hover{border-color:rgba(255,77,103,.34);box-shadow:0 12px 36px rgba(0,0,0,.22),0 0 24px rgba(255,48,79,.035)}
+.msg.streaming{border-color:rgba(255,64,91,.48);box-shadow:0 0 26px rgba(255,48,79,.07)}
+.msg.error{background:linear-gradient(145deg,rgba(48,12,19,.96),rgba(20,8,12,.98));border-color:rgba(255,92,108,.42)}
+.msg .acts{opacity:.5;flex-wrap:wrap}
+.msg:hover .acts,.msg .acts:focus-within{opacity:1}
+.tag{background:rgba(255,255,255,.025);border-color:rgba(255,91,115,.22);padding:3px 9px}
+.md h3,.md h4,.md h5{color:#ffb2bf}
+.md code{background:rgba(255,48,79,.075);border-color:rgba(255,91,115,.2);color:#ff9eae}
+.code{border-color:rgba(255,80,105,.28);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.codebar{background:linear-gradient(90deg,rgba(255,48,79,.10),rgba(255,255,255,.015));border-bottom-color:rgba(255,80,105,.2)}
+.code textarea{background:#08090d}
+.pipe{gap:7px}
+.stage{background:rgba(255,255,255,.02);border-color:rgba(255,85,108,.20)}
+.stage.run{box-shadow:0 0 16px rgba(255,48,79,.10)}
+#composer{
+  background:rgba(10,10,14,.91);border-top:1px solid rgba(255,65,92,.2);
+  padding:13px clamp(10px,2vw,22px) 15px;backdrop-filter:blur(18px);
+  box-shadow:0 -12px 34px rgba(0,0,0,.16);
+}
+.inwrap{border-radius:14px;background:linear-gradient(110deg,rgba(255,48,79,.34),rgba(255,255,255,.06),rgba(255,48,79,.20));padding:1px;box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.inwrap:focus-within{background:linear-gradient(90deg,#8e1027,#ff304f,#ff8a9b,#8e1027);box-shadow:0 0 0 3px rgba(255,48,79,.08),0 0 25px rgba(255,48,79,.10)}
+#input{background:linear-gradient(180deg,#0b0c11,#090a0e);border-radius:13px;padding:13px 15px;min-height:66px;line-height:1.6}
+#input::placeholder{color:#796d74}
+.crow{gap:9px;margin-top:10px}
+.crow button{min-height:32px}
+.crow select{border-color:rgba(255,91,115,.25);background:#101116;border-radius:8px}
+.chk{gap:8px;color:#b3a4aa}
+button,input,select,textarea{accent-color:var(--red)}
+button{border-color:rgba(255,91,115,.25);background:rgba(255,255,255,.018);transition:transform .16s,border-color .18s,background .18s,box-shadow .18s,color .18s}
+button:hover:not(:disabled){box-shadow:0 0 0 3px rgba(255,48,79,.075),0 5px 18px rgba(0,0,0,.12);transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(0) scale(.985)}
+button.primary{background:linear-gradient(135deg,#ff3858,#a10f2b);border-color:#ff647b;box-shadow:0 5px 18px rgba(255,48,79,.16)}
+button.primary:hover:not(:disabled){background:linear-gradient(135deg,#ff526d,#bd1636);box-shadow:0 7px 22px rgba(255,48,79,.24)}
+button.danger{border-color:rgba(255,92,108,.28)}
+input[type=text],input[type=password],input[type=url],select,textarea{border-color:rgba(255,91,115,.22);background:#0b0c10}
+input:focus,select:focus,textarea:focus{border-color:rgba(255,80,105,.8);box-shadow:0 0 0 3px rgba(255,48,79,.075)}
+:focus-visible{outline:2px solid rgba(255,113,134,.82);outline-offset:2px}
+#overlay{background:rgba(2,3,6,.78);backdrop-filter:blur(8px)}
+.modal,.pal-box{background:linear-gradient(145deg,#14141a,#0b0c10);border-color:rgba(255,77,103,.28);box-shadow:0 28px 90px rgba(0,0,0,.72),0 0 34px rgba(255,48,79,.055)}
+.modal h3{color:#fff;letter-spacing:.12em}
+.modal h4{color:#c3aab2}
+.field label{letter-spacing:.13em}
+table th{color:#c2aab2}
+table td,table th{border-bottom-color:rgba(255,80,105,.12)}
+.keyrow{background:rgba(255,255,255,.018);border-color:rgba(255,80,105,.18)}
+.dd-btn{background:linear-gradient(180deg,#17171e,#0c0c11);border-color:rgba(255,91,115,.26)}
+.dd-menu{background:linear-gradient(145deg,#17171d,#0b0c10);border-color:rgba(255,91,115,.3)}
+.toast{background:linear-gradient(120deg,#230b12,#12090d);border-color:rgba(255,78,104,.72);box-shadow:0 12px 35px rgba(0,0,0,.35),0 0 22px rgba(255,48,79,.1)}
+#wm{background:linear-gradient(90deg,rgba(255,48,79,.045),rgba(0,0,0,.12),rgba(255,48,79,.045));border-top-color:rgba(255,65,92,.16);color:#897780}
+#wm b{filter:drop-shadow(0 0 7px rgba(255,48,79,.22))}
+::selection{background:rgba(255,48,79,.34);color:#fff}
+@media(max-width:820px){
+  #side{box-shadow:18px 0 55px rgba(0,0,0,.64);border-right-color:rgba(255,65,92,.3)}
+  header{padding:9px 10px;gap:7px}
+  .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg button{padding:7px 9px;white-space:nowrap}
+  #messages{padding:14px 10px 10px;gap:11px}
+  .msg,.msg.assistant{max-width:100%;width:100%;padding:11px 12px}
+  .msg.user{width:auto;max-width:92%}
+  #composer{padding:9px 10px 11px}
+  #input{min-height:58px}
+  .crow{gap:6px}
+  .crow .sp{display:none}
+}
+@media(max-width:480px){
+  header .title{order:5;flex-basis:100%;max-width:100%}
+  .pill{font-size:10px;padding:4px 8px;max-width:46vw}
+  #palBtn{padding:6px 8px}
+  .crow button,.crow select{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div class="brand">
+      <div class="logo"><span class="ring"></span>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 35 11.5v17L20 37 5 28.5v-17z" fill="#120a0d" stroke="#ff2d4f" stroke-width="1.6"/><path d="M13 14h14l-14 12h14" fill="none" stroke="#ff6b82" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      </div>
+      <div><b>ZTC AI</b><small>agent workbench</small></div>
+    </div>
+    <div class="sec"><span>Projects</span><button id="newProject" title="New project">+</button></div>
+    <div id="projects" class="list"></div>
+    <div class="sec"><span>Chats</span><button id="newChat" title="New chat">+</button></div>
+    <div style="padding:0 10px 6px"><input id="filter" type="text" placeholder="Filter chats (title and text)"></div>
+    <div id="chats" class="list"></div>
+    <div class="foot"><button id="openRoutes">Routes</button><button id="openSettings">Settings</button></div>
+  </aside>
+  <main>
+    <header>
+      <button id="menuBtn">Menu</button>
+      <div class="seg" id="modes">
+        <button data-mode="auto">Auto</button><button data-mode="agents">Agents</button><button data-mode="council">Council</button><button data-mode="single">Single</button><button data-mode="local">Local</button>
+      </div>
+      <span id="status" class="pill">Ready</span>
+      <span id="meter" class="pill"></span>
+      <span id="chatTitle" class="title"></span>
+      <button id="palBtn">Command<kbd>Ctrl K</kbd></button>
+    </header>
+    <div id="messages"></div>
+    <div id="composer">
+      <div id="files" class="files" hidden></div>
+      <div class="inwrap"><textarea id="input" rows="2" placeholder="Message ZTC AI. Enter sends, Shift+Enter adds a line. Commands: /agents /council /search /verify /img"></textarea></div>
+      <div class="crow">
+        <button id="attachBtn">Attach</button>
+        <label class="chk"><input id="togSearch" type="checkbox">Web research</label>
+        <label class="chk"><input id="togVerify" type="checkbox">Verify</label>
+        <select id="speed" title="Speed profile"><option value="turbo">Turbo</option><option value="balanced">Balanced</option><option value="thorough">Thorough</option></select>
+        <span class="sp"></span>
+        <button id="stopBtn" class="danger" hidden>Stop</button>
+        <button id="sendBtn" class="primary">Send</button>
+      </div>
+    </div>
+    <footer id="wm">Powered by <b>Zeynar The Creator</b></footer>
+  </main>
+</div>
+<input id="file" type="file" multiple hidden>
+<input id="importFile" type="file" accept="application/json" hidden>
+<div id="overlay" hidden><div class="modal" id="modal"></div></div>
+<div id="palette" hidden><div class="pal-box"><input id="palInput" type="text" placeholder="Type a command"><div id="palList" class="pal-list"></div></div></div>
+
+<script>
+"use strict";
+const CATALOG=[
+  {provider:"Pollinations",baseUrl:"https://gen.pollinations.ai/v1/chat/completions",
+   keyRef:"pollinations",requiresKey:true,
+   models:[["openai/gpt-oss-20b",false,false],["openai/gpt-5.4-nano",false,false],
+     ["deepseek/deepseek-v4-flash",false,true],["google/gemini-3-flash-preview",false,false],
+     ["qwen/qwen3-coder-30b-a3b-instruct",false,true]],timeout:35},
+  {provider:"GLM Bridge",baseUrl:"https://glm.cognix.sryze.cc/v1/chat/completions",
+   models:[["glm-5.3-flash",false,false],["glm-5.3",false,false],["glm-5.2",false,false],
+     ["GLM-5.1",false,false],["GLM-5-Turbo",false,false],["GLM-5v-Turbo",true,false],
+     ["glm-4.7",false,false],["glm-4.7-flash",false,false],["glm-4.6v-flash",true,false]],timeout:40},
+  {provider:"Groq",baseUrl:"https://api.groq.com/openai/v1/chat/completions",
+   keyRef:"groq",requiresKey:true,
+   models:[["openai/gpt-oss-120b",false,false],["qwen/qwen3.8-27b",false,true]],timeout:35},
+  {provider:"NVIDIA NIM",baseUrl:"https://integrate.api.nvidia.com/v1/chat/completions",
+   keyRef:"nvidia",requiresKey:true,headers:{Accept:"application/json"},
+   models:[["deepseek-ai/deepseek-v4-pro",false,true],["meta/llama-3.3-70b-instruct",false,false],
+     ["qwen/qwen3-coder-480b-a35b-instruct",false,true],
+     ["nvidia/llama-3.1-nemotron-ultra-253b-v1",false,false],
+     ["mistralai/mistral-large-2-instruct",false,false],
+     ["microsoft/phi-4-mini-instruct",false,false]],timeout:45},
+  {provider:"OpenRouter",baseUrl:"https://openrouter.ai/api/v1/chat/completions",
+   keyRef:"openrouter",requiresKey:true,
+   headers:{"HTTP-Referer":"https://ztc.ai.local","X-Title":"ZTC AI"},
+   models:[["openrouter/free",false,false],["deepseek/deepseek-r1:free",false,true],
+     ["qwen/qwen3-coder:free",false,true],
+     ["meta-llama/llama-3.3-70b-instruct:free",false,false],
+     ["google/gemini-2.0-flash-exp:free",false,false],
+     ["openai/gpt-oss-120b:free",false,false]],timeout:45},
+  {provider:"OVHcloud",baseUrl:"https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions",
+   models:[["Qwen3.5-397B-A17B",false,false],["gpt-oss-120b",false,false],
+     ["gpt-oss-20b",false,false],["Meta-Llama-3_3-70B-Instruct",false,false],
+     ["Qwen3.8-27B",false,false],["Qwen3.6-27B",false,false],["Qwen3.5-9B",false,false],
+     ["Mistral-Small-3.2-24B-Instruct",false,false],["Qwen2.5-VL-72B-Instruct",true,false]],timeout:25},
+  {provider:"Kilo",baseUrl:"https://api.kilo.ai/api/openrouter/chat/completions",
+   headers:{Authorization:"Bearer anonymous","X-KILOCODE-EDITORNAME":"kilo"},
+   models:[["kilo-auto/free",false,false],["minimax/minimax-m2.1:free",false,false],
+     ["z-ai/glm-5:free",false,false],["nvidia/nemotron-3-ultra:free",false,false],
+     ["nvidia/nemotron-3.5-lightning:free",false,false],
+     ["nvidia/nemotron-3.5-super-vl:free",true,false],
+     ["deepseek/deepseek-r1-0528:free",false,true],
+     ["meta-llama/llama-3.3-70b-instruct:free",false,false],
+     ["qwen/qwen3-coder:free",false,true],["stepfun/step-3.7-flash:free",false,false]],timeout:25},
+  {provider:"Hack Club AI",baseUrl:"https://ai.hackclub.com/proxy/v1/chat/completions",
+   keyRef:"hackclub",requiresKey:true,
+   models:[["qwen/qwen3-32b",false,true],["openai/gpt-4o-mini",false,false],
+     ["deepseek/deepseek-v3.2",false,true]],timeout:35},
+  {provider:"LLM7 Anonymous",baseUrl:"https://api.llm7.io/v1/chat/completions",
+   keyRef:"llm7",
+   models:[["deepseek-v4-flash",false,true],["codestral-latest",false,true]],timeout:30},
+  {provider:"G4F Public · Groq",baseUrl:"https://g4f.space/api/groq/chat/completions",
+   models:[["openai/gpt-oss-120b",false,false],["qwen/qwen3.8-27b",false,true]],timeout:35,useProxy:false},
+  {provider:"G4F Public · Ollama",baseUrl:"https://g4f.space/api/ollama/chat/completions",
+   models:[["llama3.2",false,false]],timeout:35,useProxy:false},
+  {provider:"G4F Public · Gemini",baseUrl:"https://g4f.space/api/gemini/chat/completions",
+   models:[["gemini-2.5-flash",false,false]],timeout:35,useProxy:false},
+  {provider:"G4F Public · NVIDIA",baseUrl:"https://g4f.space/api/nvidia/chat/completions",
+   models:[["meta/llama-3.3-70b-instruct",false,false]],timeout:35,useProxy:false},
+
+  /* Additional free-tier providers discovered from public GitHub directories.
+     Keys are user-supplied; no credentials are embedded in this file. */
+  {provider:"Cerebras",baseUrl:"https://api.cerebras.ai/v1/chat/completions",
+   keyRef:"cerebras",requiresKey:true,
+   models:[["gpt-oss-120b",false,false],["llama3.1-8b",false,false],
+     ["qwen-3-235b-a22b-instruct-2507",false,true],["zai-glm-4.7",false,false]],timeout:30},
+  {provider:"Mistral",baseUrl:"https://api.mistral.ai/v1/chat/completions",
+   keyRef:"mistral",requiresKey:true,
+   models:[["mistral-small-latest",false,false],["mistral-large-latest",false,false],
+     ["codestral-latest",false,true],["open-mistral-nemo",false,false]],timeout:40},
+  {provider:"Z.ai",baseUrl:"https://open.bigmodel.cn/api/paas/v4/chat/completions",
+   keyRef:"zai",requiresKey:true,
+   models:[["glm-4.7-flash",false,false],["glm-4.5-flash",false,false],
+     ["glm-4.6v-flash",true,false]],timeout:35},
+  {provider:"SambaNova",baseUrl:"https://api.sambanova.ai/v1/chat/completions",
+   keyRef:"sambanova",requiresKey:true,
+   models:[["DeepSeek-V3.2",false,true],["DeepSeek-R1",false,true],
+     ["Meta-Llama-3.3-70B-Instruct",false,false],["gpt-oss-120b",false,false]],timeout:40},
+  {provider:"SiliconFlow",baseUrl:"https://api.siliconflow.com/v1/chat/completions",
+   keyRef:"siliconflow",requiresKey:true,
+   models:[["deepseek-ai/DeepSeek-R1",false,true],
+     ["Qwen/Qwen3-8B",false,false],
+     ["deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",false,true],
+     ["THUDM/glm-4-9b-chat",false,false]],timeout:40},
+  {provider:"Cohere",baseUrl:"https://api.cohere.com/compatibility/v1/chat/completions",
+   keyRef:"cohere",requiresKey:true,
+   models:[["command-a-03-2025",false,false],["command-r-plus-08-2024",false,false],
+     ["command-r-08-2024",false,false],["command-r7b-12-2024",false,false]],timeout:40},
+  {provider:"Google Gemini",baseUrl:"https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+   keyRef:"gemini",requiresKey:true,
+   models:[["gemini-2.5-flash",false,false],["gemini-2.5-flash-lite",false,false]],timeout:35},
+  {provider:"Cloudflare Workers AI",baseUrl:"https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/v1/chat/completions",
+   keyRef:"cloudflare",requiresKey:true,
+   models:[["@cf/meta/llama-3.3-70b-instruct-fp8-fast",false,false],
+     ["@cf/openai/gpt-oss-120b",false,false],["@cf/meta/llama-3.1-8b-instruct",false,false]],timeout:35},
+  {provider:"LLMFaucet",baseUrl:"https://api.llmfaucet.dev/v1/chat/completions",
+    headers:{Authorization:"Bearer free"},
+    models:[["auto",false,false],["auto:fast",false,false],["auto:smart",false,false],["auto:coding",false,true]],timeout:45},
+  {provider:"AI Horde",baseUrl:"https://aihorde.net/api/v2/generate/async",
+    models:[["horde-text",false,false]],timeout:90,adapter:"aihorde"},
+  {provider:"Puter.js",baseUrl:"puter://ai.chat",
+    models:[["gpt-5.4-nano",false,false],["claude-sonnet-4-5",false,false],["gemini-2.5-flash",false,false]],timeout:90,adapter:"puter",enabled:false},
+  {provider:"GitHub Models",baseUrl:"https://models.github.ai/inference/chat/completions",
+   keyRef:"github",requiresKey:true,
+   models:[["openai/gpt-4.1-mini",false,false],["meta/Llama-3.3-70B-Instruct",false,false],["deepseek/DeepSeek-V3-0324",false,true]],timeout:40},
+  {provider:"Hugging Face",baseUrl:"https://router.huggingface.co/v1/chat/completions",
+   keyRef:"huggingface",requiresKey:true,
+   models:[["meta-llama/Llama-3.3-70B-Instruct",false,false],["Qwen/Qwen2.5-Coder-32B-Instruct",false,true]],timeout:40},
+  /* v20: found on public free-API directories (nejib1/Free-LLM, amardeeplakshkar/awesome-free-llm-apis).
+     Base URLs come from those lists; model IDs are NOT verified. Off by default: enable in Routes, then Test. */
+  {provider:"Kilo Gateway (anon)",baseUrl:"https://api.kilo.ai/api/gateway/chat/completions",
+   models:[["kilo-auto/free",false,false]],timeout:30,enabled:false},
+  {provider:"Requesty",baseUrl:"https://router.requesty.ai/v1/chat/completions",
+   keyRef:"requesty",requiresKey:true,models:[["openai/gpt-4o-mini",false,false]],timeout:40,enabled:false},
+  {provider:"Aion Labs",baseUrl:"https://api.aionlabs.ai/v1/chat/completions",
+   keyRef:"aion",requiresKey:true,models:[["aion-2.0",false,false]],timeout:40,enabled:false},
+  {provider:"Hetzner Inference",baseUrl:"https://inference.hetzner.com/api/v1/chat/completions",
+   keyRef:"hetzner",requiresKey:true,models:[["Qwen3.8-27B",false,false]],timeout:40,enabled:false},
+  {provider:"Api.Airforce",baseUrl:"https://api.airforce/v1/chat/completions",
+   keyRef:"airforce",requiresKey:true,models:[["gpt-4o-mini",false,false]],timeout:40,enabled:false},
+  {provider:"UnoRouter",baseUrl:"https://api.unorouter.com/v1/chat/completions",
+   keyRef:"unorouter",requiresKey:true,models:[["meta-llama/llama-3.3-70b-instruct:free",false,false]],timeout:40,enabled:false},
+  {provider:"Ollama Cloud",baseUrl:"https://ollama.com/v1/chat/completions",
+   keyRef:"ollama",requiresKey:true,models:[["gpt-oss:120b",false,false]],timeout:60,enabled:false},
+  {provider:"Free.ai",baseUrl:"https://api.free.ai/v1/chat/",
+    keyRef:"freeai",requiresKey:true,models:[["qwen7b",false,false]],timeout:45},
+
+  /* Public candidates. BlockRun is dynamically filtered to zero-cost models only. */
+  {provider:"BlockRun Keyless",baseUrl:"https://blockrun.ai/v1/chat/completions",
+    models:[["nvidia/nemotron-3.5-lightning",false,false]],timeout:35},
+  {provider:"flm Anonymous",baseUrl:"https://flm.stonech.at/v1/chat/completions",
+    models:[["auto",false,false]],timeout:45},
+  {provider:"DG AI Experimental",baseUrl:"https://dg-ai.scriptsnsenses.workers.dev/v1/chat/completions",
+    models:[["gpt-oss",false,false]],timeout:35},
+  {provider:"BeaverNet Experimental",baseUrl:"https://net.beaverai.org/v1/chat/completions",
+    models:[["beaver-auto",false,false]],timeout:30,enabled:false},
+
+  /* V14 keyless providers. Model IDs and limits follow each provider's public docs. */
+  /* V15 keyless additions, verified against public provider docs and free-API directories (Nov 2026).
+     Paths follow the OpenAI-compatible convention; a wrong path fails over automatically. */
+  {provider:"Pollinations Anonymous",baseUrl:"https://text.pollinations.ai/openai/chat/completions",
+    models:[["openai",false,false]],timeout:35},
+  {provider:"Community Gateway · opt-in",baseUrl:"https://chatgpt-free-api-sasa-dev.vercel.app/v1/chat/completions",
+    models:[["openai",false,false]],timeout:45,enabled:false},
+  {provider:"Murakumo Free",baseUrl:"https://api.murakumo.cloud/v1/chat/completions",
+    models:[["murakumo/free",false,true]],timeout:90},
+  {provider:"Vireonix Auto",baseUrl:"https://vireonix.ai/v1/chat/completions",
+    models:[["auto",false,true]],timeout:45},
+  {provider:"Animica Free",baseUrl:"https://animica.dev/v1/chat/completions",
+    models:[["kimi-k3",false,true]],timeout:45},
+  {provider:"Animica Standard · opt-in",baseUrl:"https://animica.dev/v1/chat/completions",
+    models:[["animica-chat",false,false]],timeout:45,enabled:false},
+  {provider:"Animica Small · opt-in",baseUrl:"https://animica.dev/v1/chat/completions",
+    models:[["animica-chat-small",false,false]],timeout:45,enabled:false},
+
+  /* V23: newly researched additions. Keyless JarvisClaw; keyed gateways remain opt-in by key. */
+  {provider:"JarvisClaw Free · keyless",baseUrl:"https://api.jarvisclaw.ai/v1/chat/completions",
+    models:[["auto/free",false,false]],timeout:45,stream:false},
+  {provider:"Vercel AI Gateway",baseUrl:"https://ai-gateway.vercel.sh/v1/chat/completions",
+    keyRef:"vercelgateway",requiresKey:true,
+    models:[["openai/gpt-5.4-mini",false,false],["anthropic/claude-sonnet-4.6",false,false]],timeout:45},
+  {provider:"OpenTyphoon",baseUrl:"https://api.opentyphoon.ai/v1/chat/completions",
+    keyRef:"typhoon",requiresKey:true,
+    models:[["typhoon-v2.5-30b-a3b-instruct",false,false],["typhoon-v2.1-12b-instruct",false,false]],timeout:45}
+];
+
+
+/* ZTC AI v23 stream parser.
+   Sniffs the body instead of trusting Content-Type, so SSE sent under a JSON or text
+   header is still parsed. Reasoning tokens go to their own channel and never reach the answer. */
+function cleanModelText(t){
+  if(!t)return "";
+  return String(t).split("\n").filter(l=>{
+    const s=l.trim();
+    if(/^(self)?data:\s*\[DONE\]$/.test(s))return false;
+    if(/^(self)?data:\s*\{.*("chatcmpl|"chat\.completion|"prompt_tokens"|"reasoning"\s*:|"reasoning_content"\s*:)/.test(s))return false;
+    return true;
+  }).join("\n");
+}
+function textOf(v){
+  if(v==null)return "";
+  if(typeof v==="string")return v;
+  if(Array.isArray(v))return v.map(p=>typeof p==="string"?p:(p&&typeof p.text==="string"?p.text:"")).join("");
+  return "";
+}
+function* chunkEvents(j){
+  if(!j||typeof j!=="object")return;
+  if(j.error)throw new Error(j.error.message||JSON.stringify(j.error).slice(0,160));
+  const c=j.choices&&j.choices[0];
+  if(!c)return;
+  const d=c.delta||c.message||{};
+  const th=textOf(d.reasoning_content)||textOf(d.reasoning);
+  if(th)yield{type:"reasoning",text:th};
+  const txt=textOf(d.content)||textOf(c.text);
+  if(txt)yield{type:"delta",text:txt};
+  if(c.finish_reason)yield{type:"end",finish:c.finish_reason};
+}
+function* sseLine(raw){
+  const line=String(raw).replace(/\r$/,"").trim();
+  if(!line.startsWith("data:"))return;
+  const payload=line.slice(5).trim();
+  if(!payload||payload==="[DONE]")return;
+  let j;try{j=JSON.parse(payload);}catch(e){return;}
+  yield* chunkEvents(j);
+}
+function* parseBodyText(raw){
+  const t=String(raw||"").replace(/^\uFEFF/,"").trim();
+  if(!t)throw new Error("empty response body");
+  if(/^(data:|event:|:)/m.test(t)){for(const line of t.split("\n"))yield* sseLine(line);return;}
+  let j;
+  try{j=JSON.parse(t);}catch(e){throw new Error("non-JSON response: "+t.slice(0,160));}
+  if(j.error)throw new Error(j.error.message||JSON.stringify(j.error).slice(0,160));
+  const c=j.choices&&j.choices[0];
+  if(!c)throw new Error("unrecognized response shape: "+t.slice(0,120));
+  const msg=c.message||c.delta||{};
+  const th=textOf(msg.reasoning_content)||textOf(msg.reasoning);
+  if(th)yield{type:"reasoning",text:th};
+  const txt=textOf(msg.content)||textOf(c.text);
+  if(txt)yield{type:"delta",text:txt};
+  yield{type:"end",finish:c.finish_reason};
+}
+async function* readSSE(res,signal){
+  if(!res.ok){
+    let b="";try{b=await res.text();}catch(e){}
+    throw new Error("HTTP "+res.status+(b?" — "+b.slice(0,180):""));
+  }
+  const ct=(res.headers.get("content-type")||"").toLowerCase();
+  if(!res.body){yield* parseBodyText(await res.text());return;}
+  const reader=res.body.getReader();
+  const onAbort=()=>{reader.cancel().catch(()=>{});};
+  if(signal){if(signal.aborted)onAbort();else signal.addEventListener("abort",onAbort,{once:true});}
+  const dec=new TextDecoder();
+  let buf="",all="",mode=ct.includes("event-stream")?"sse":null,sawData=false;
+  while(true){
+    const{done,value}=await reader.read();
+    if(done){const tail=dec.decode();buf+=tail;all+=tail;break;}
+    const chunk=dec.decode(value,{stream:true});
+    buf+=chunk;all+=chunk;
+    if(mode===null){
+      const head=buf.replace(/^\uFEFF/,"").trimStart();
+      if(head.length<6)continue;
+      mode=/^(data:|event:|:)/.test(head)?"sse":"body";
+    }
+    if(mode!=="sse")continue;
+    let idx;
+    while((idx=buf.indexOf("\n"))!==-1){
+      const line=buf.slice(0,idx);buf=buf.slice(idx+1);
+      if(/^\s*data:/.test(line))sawData=true;
+      yield* sseLine(line);
+    }
+  }
+  if(signal&&signal.aborted)throw abortErr();
+  if(mode==="sse"&&sawData){if(buf.trim())yield* sseLine(buf);}
+  else yield* parseBodyText(all);
+}
+
+
+
+/* ---------- constants ---------- */
+const APP_KEY="ztc_ai_v16";
+const DEFAULT_LOCAL="onnx-community/Qwen3-0.6B-ONNX";
+const LOCAL_TF="https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3";
+const LEGACY_KEYS=["ztc_ai_v15","volkyz_bench_v10"];
+const SYSTEM_DEFAULT="You are ZTC AI, a precise, fast and honest assistant. Understand the real goal, use the full conversation, and answer directly. Prefer complete, working, specific output. Do not invent facts, sources, test results or completed actions. State uncertainty plainly and ask a clarifying question only when essential.";
+const CODE_SYSTEM="You are a senior software engineer. Preserve the existing architecture and requested constraints. Return complete, runnable code with no stubs. Check edge cases, error handling and async behavior. Never claim code was run unless it was.";
+const PROMPTS={
+  planner:"You are the PLANNER agent in a team of AI agents working on one task. Produce a short numbered plan of at most 8 steps with concrete acceptance criteria. Do not produce the deliverable itself.",
+  builder:"You are the BUILDER agent. Produce the complete deliverable for the latest request, following the plan when one is given. Be complete and specific. No placeholders and no omitted sections.",
+  reviewer:"You are the REVIEWER agent. Check the deliverable against the task and the plan. Reply ONLY with JSON: {\"verdict\":\"PASS\" or \"REVISE\",\"issues\":[\"...\"]}. Use REVISE only for real defects that matter.",
+  verifier:"You are the VERIFIER agent. Independently check the deliverable for factual errors, logic errors and broken code. Reply ONLY with JSON: {\"verdict\":\"PASS\" or \"WARN\" or \"FAIL\",\"confidence\":0-100,\"issues\":[\"...\"]}.",
+  synth:"You are the SYNTHESIZER agent. Produce the final answer for the user from the deliverable and the verifier findings. Fix every listed issue. Output only the final answer."
+};
+const PRESETS={
+  turbo:{stagger:160,rounds:0,contRounds:1,maxRoutes:4},
+  balanced:{stagger:300,rounds:1,contRounds:2,maxRoutes:5},
+  thorough:{stagger:650,rounds:2,contRounds:3,maxRoutes:6}
+};
+const EXT={js:"js",javascript:"js",ts:"ts",typescript:"ts",py:"py",python:"py",html:"html",css:"css",json:"json",sh:"sh",bash:"sh",sql:"sql",md:"md",markdown:"md"};
+const TEXT_FILE=/\.(txt|md|markdown|js|mjs|ts|tsx|jsx|py|json|csv|html?|css|xml|ya?ml|go|rs|java|c|cc|cpp|h|hpp|cs|rb|php|sh|sql|log|toml|ini)$/i;
+
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,10));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* Signal-safe fetch: the AbortSignal is never handed to fetch() itself (some hosts clone
+   request init objects across postMessage and fail with "AbortSignal could not be cloned").
+   Abort is applied here instead: reject before the response, or cancel the body after it. */
+function sigFetch(url,init){
+  const o=Object.assign({},init||{});
+  const sig=o.signal;delete o.signal;
+  let fetchUrl=url;
+  try{
+    if(typeof state!=="undefined"&&state.proxyEnabled&&state.proxyUrl){
+      const target=new URL(String(url));
+      const relay=new URL(state.proxyUrl);
+      if(target.protocol==="https:"&&target.origin!==relay.origin){
+        const headers=new Headers(o.headers||{});
+        headers.set("X-Target-URL",target.href);
+        if(state.proxyToken)headers.set("X-Relay-Token",state.proxyToken);
+        o.headers=headers;fetchUrl=relay.href;
+      }
+    }
+  }catch(e){return Promise.reject(new Error("Invalid CORS relay or target URL: "+e.message));}
+  if(!sig)return fetch(fetchUrl,o);
+  if(sig.aborted)return Promise.reject(abortErr());
+  return new Promise((resolve,reject)=>{
+    let settled=false,aborted=false;
+    const onAbort=()=>{aborted=true;if(!settled)reject(abortErr());};
+    sig.addEventListener("abort",onAbort,{once:true});
+    fetch(fetchUrl,o).then(r=>{
+      settled=true;sig.removeEventListener("abort",onAbort);
+      if(aborted){try{r.body&&r.body.cancel().catch(()=>{});}catch(e){}return;}
+      resolve(r);
+    },e=>{settled=true;sig.removeEventListener("abort",onAbort);if(!aborted)reject(e);});
+  });
+}
+async function sleepWithSignal(ms,signal){
+  if(signal&&signal.aborted)throw abortErr();
+  await new Promise((resolve,reject)=>{
+    const id=setTimeout(done,ms);
+    function done(){if(signal)signal.removeEventListener("abort",stop);resolve();}
+    function stop(){clearTimeout(id);signal.removeEventListener("abort",stop);reject(abortErr());}
+    if(signal)signal.addEventListener("abort",stop,{once:true});
+  });
+}
+async function fetchWithRetry(url,init,signal){
+  const retryable=new Set([408,425,429,500,502,503,504]);
+  for(let attempt=0;attempt<3;attempt++){
+    const res=await sigFetch(url,Object.assign({},init,{signal}));
+    if(!retryable.has(res.status)||attempt===2)return res;
+    const raw=res.headers.get("retry-after");
+    let delay=raw&&/^\d+(?:\.\d+)?$/.test(raw)?Number(raw)*1000:(raw&&Date.parse(raw)>Date.now()?Date.parse(raw)-Date.now():650*Math.pow(2,attempt));
+    delay=Math.max(350,Math.min(3500,delay));
+    try{if(res.body)await res.body.cancel();}catch(e){}
+    await sleepWithSignal(delay,signal);
+  }
+  throw new Error("Retry limit reached");
+}
+const abortErr=()=>new DOMException("aborted","AbortError");
+const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;};
+const preset=()=>PRESETS[state.speed]||PRESETS.balanced;
+
+/* ---------- state ---------- */
+const DEF={localModel:DEFAULT_LOCAL,localFallback:true,temperature:0.7,autoFallback:true,rememberKeys:true,mode:"auto",speed:"balanced",search:false,verify:false,system:SYSTEM_DEFAULT,cloudflareAccountId:"",proxyEnabled:false,proxyUrl:"",proxyToken:"",
+  keys:{},routeOverrides:{},custom:[],stats:{},banned:[],pinned:[],projects:[],activeProject:null,activeChat:null};
+const newProject=name=>({id:uid(),name:name||"Untitled project",chats:[]});
+const newChat=()=>({id:uid(),title:"New chat",messages:[],created:Date.now()});
+function normalize(raw){
+  const src=(raw&&typeof raw==="object"&&!Array.isArray(raw))?raw:{};
+  const out=JSON.parse(JSON.stringify(DEF));
+  for(const k of ["mode","speed","search","verify","system","cloudflareAccountId","rememberKeys","activeProject","activeChat","localModel","localFallback","temperature","autoFallback","proxyEnabled","proxyUrl","proxyToken"])
+    if(src[k]!==undefined)out[k]=src[k];
+  if(!["auto","agents","council","single","image","video","deep","local"].includes(out.mode))out.mode="auto";
+  if(!PRESETS[out.speed])out.speed="balanced";
+  out.search=!!out.search;out.verify=!!out.verify;out.rememberKeys=out.rememberKeys!==false;
+  out.system=String(out.system||SYSTEM_DEFAULT).slice(0,4000);
+  out.cloudflareAccountId=String(out.cloudflareAccountId||"").slice(0,80);
+  out.proxyEnabled=!!out.proxyEnabled;
+  out.proxyUrl=String(out.proxyUrl||"").trim().slice(0,500);
+  out.proxyToken=String(out.proxyToken||"").slice(0,300);
+  out.localModel=String(out.localModel||DEFAULT_LOCAL).slice(0,200);out.localFallback=out.localFallback!==false;out.autoFallback=out.autoFallback!==false;
+  out.temperature=Math.min(2,Math.max(0,Number(out.temperature)||0));
+  out.keys=strObj(src.keys);
+  out.routeOverrides=boolObj(src.routeOverrides);
+  out.stats=src.stats&&typeof src.stats==="object"?src.stats:{};
+  for(const k of Object.keys(out.stats)){const st=out.stats[k];if(st&&/could not be cloned|postMessage|DataClone/i.test(st.err||""))st.cool=0;}
+  out.custom=Array.isArray(src.custom)?src.custom.filter(c=>c&&typeof c.baseUrl==="string"&&/^https:\/\//.test(c.baseUrl)&&Array.isArray(c.models)).slice(0,20):[];
+  out.banned=strArr(src.banned);out.pinned=strArr(src.pinned);
+  out.projects=(Array.isArray(src.projects)?src.projects:[]).filter(p=>p&&typeof p.id==="string").slice(0,40).map(p=>({
+    id:p.id,name:String(p.name||"Project").slice(0,80),
+    chats:(Array.isArray(p.chats)?p.chats:[]).filter(c=>c&&typeof c.id==="string").slice(0,300).map(c=>({
+      id:c.id,title:String(c.title||"Chat").slice(0,120),created:Number(c.created)||Date.now(),
+      messages:(Array.isArray(c.messages)?c.messages:[]).filter(m=>m&&["user","assistant","error"].includes(m.role)&&typeof m.content==="string")
+        .slice(-400).map(m=>Object.assign({},m,{content:String(m.content).slice(0,LIMITS.maxInput*4)}))}))}));
+  if(!out.projects.length){const p=newProject("Workspace");out.projects=[p];out.activeProject=p.id;}
+  if(!out.projects.find(p=>p.id===out.activeProject))out.activeProject=out.projects[0].id;
+  const p=out.projects.find(p=>p.id===out.activeProject);
+  if(!p.chats.length)p.chats.push(newChat());
+  if(!p.chats.find(c=>c.id===out.activeChat))out.activeChat=p.chats[0].id;
+  return out;
+}
+const strObj=o=>{const r={};if(o&&typeof o==="object")for(const k of Object.keys(o).slice(0,60)){if(k==="__proto__"||k==="constructor")continue;r[k]=String(o[k]||"").slice(0,400);}return r;};
+const boolObj=o=>{const r={};if(o&&typeof o==="object")for(const k of Object.keys(o).slice(0,500)){if(k==="__proto__")continue;r[k]=!!o[k];}return r;};
+const strArr=a=>Array.isArray(a)?a.filter(x=>typeof x==="string").slice(0,200):[];
+function loadState(){
+  for(const k of [APP_KEY,...LEGACY_KEYS]){
+    const raw=localStorage.getItem(k);if(!raw)continue;
+    try{return normalize(JSON.parse(raw));}catch(e){}
+  }
+  return normalize({});
+}
+let state=loadState();
+let ROUTES=[];
+const runtime={busy:false,ctl:null,pending:[],modalClose:null};
+const activeProject=()=>state.projects.find(p=>p.id===state.activeProject)||null;
+const activeChat=()=>{const p=activeProject();return p?p.chats.find(c=>c.id===state.activeChat)||null:null;};
+let saveT=null;
+function saveSoon(){clearTimeout(saveT);saveT=setTimeout(saveNow,250);}
+function saveNow(){
+  try{
+    const data=JSON.parse(JSON.stringify(state));
+    if(!state.rememberKeys){data.keys={};data.proxyToken="";}
+    data.custom=(data.custom||[]).map(c=>Object.assign({},c,{apiKey:state.rememberKeys?c.apiKey:""}));
+    localStorage.setItem(APP_KEY,JSON.stringify(data));
+  }catch(e){toast("Storage is full. Export your workspace.");}
+}
+let toastT=null;
+function toast(msg){
+  let t=$("toastBox");
+  if(!t){t=el("div","toast");t.id="toastBox";document.body.appendChild(t);}
+  t.textContent=msg;clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),3200);
+}
+
+/* ---------- routes and health ---------- */
+function buildRoutes(){
+  const out=[];
+  for(const p of CATALOG.concat(state.custom)){
+    for(const [m,vision,code] of p.models){
+      out.push({id:(p.provider+"::"+m).toLowerCase().replace(/[^a-z0-9:/._-]+/g,""),provider:p.provider,label:p.provider+" · "+m,
+        url:p.baseUrl,model:m,headers:Object.assign({},p.headers||{}),apiKey:p.apiKey||"",keyRef:p.keyRef||null,
+        requiresKey:!!p.requiresKey,timeout:p.timeout||20,vision:!!vision,code:!!code,adapter:p.adapter||null,
+        enabled:p.enabled!==false,stream:p.stream,custom:!!p.custom});
+    }
+  }
+  return out;
+}
+const refreshRoutes=()=>{ROUTES=buildRoutes();};
+const keyFor=r=>r.apiKey||(r.keyRef&&state.keys[r.keyRef])||"";
+const isEnabled=r=>{const o=state.routeOverrides[r.id];return o===undefined?r.enabled:!!o;};
+function statOf(id){return state.stats[id]||(state.stats[id]={ok:0,fail:0,latSum:0,latN:0,err:"",streak:0,cool:0});}
+function recordOk(r,ms){const s=statOf(r.id);s.ok++;s.latSum+=ms;s.latN++;if(s.latN>40){s.latSum/=2;s.latN=20;}s.err="";s.streak=0;s.cool=0;s.blocked=false;saveSoon();}
+function recordFail(r,e){
+  const s=statOf(r.id);const msg=String(e&&e.message||e);
+  s.fail++;s.err=msg.slice(0,220);s.streak++;
+  if(/could not be cloned|postMessage|DataClone/i.test(msg))s.cool=Date.now()+3600000;
+  else if(/Failed to fetch|NetworkError|Load failed|fetch failed/i.test(msg)){s.blocked=true;s.cool=Date.now()+1200000;}
+  else if(s.streak>=3)s.cool=Date.now()+90000;
+  saveSoon();
+}
+function sendable(r,soft){
+  if(!isEnabled(r)||state.banned.includes(r.id))return false;
+  if(!soft&&statOf(r.id).cool>Date.now())return false;
+  if(r.url.includes("{accountId}")&&!state.cloudflareAccountId)return false;
+  if(r.requiresKey&&!keyFor(r))return false;
+  return true;
+}
+function routeScore(r,intent){
+  const s=statOf(r.id),tries=s.ok+s.fail;
+  const rel=tries?s.ok/tries:0.65;
+  const lat=s.latN?s.latSum/s.latN:3500;
+  let v=rel*100-Math.min(lat,20000)/60-Math.min(s.streak,6)*12;
+  if(intent==="code"){
+    if(r.code)v+=28;
+    if(/coder|codestral|devstral|deepseek|qwen.*coder|starcoder|code/i.test(r.model))v+=18;
+  }
+  if(intent==="reasoning"&&/r1|gpt-oss|deepseek|glm|kimi|qwen3|reason|nemotron|qwq/i.test(r.model))v+=24;
+  if(intent==="search"&&/gpt-oss|gemini|deepseek|glm|kimi|qwen|llama|mistral/i.test(r.model))v+=14;
+  if(intent==="design"){
+    if(r.vision)v+=34;
+    if(/gpt-4o|gemini|claude|qwen.*vl|pixtral|glm.*v|llama.*vision|vision/i.test(r.model))v+=22;
+  }
+  if(intent==="creative"&&/claude|gpt|gemini|mistral|command|llama|kimi/i.test(r.model))v+=14;
+  if(state.pinned.includes(r.id))v+=40;
+  return v;
+}
+function eligible(intent){
+  let list=ROUTES.filter(r=>sendable(r,false));
+  if(!list.length)list=ROUTES.filter(r=>sendable(r,true));
+  return list.sort((a,b)=>routeScore(b,intent)-routeScore(a,intent));
+}
+function orderAvoiding(list,avoid){const a=(avoid||[]).filter(Boolean);return list.filter(r=>!a.includes(r.provider)).concat(list.filter(r=>a.includes(r.provider)));}
+function distinctProviders(list,n){const seen=new Set(),out=[];for(const r of list){if(seen.has(r.provider))continue;seen.add(r.provider);out.push(r);if(out.length>=n)break;}return out;}
+
+/* ---------- engine: one route stream, hedged race, sequential failover ---------- */
+/* ---------- guards: local budgets, input and output limits ---------- */
+const LIMITS={maxInput:60000,maxFiles:6,maxFileBytes:600000,maxOutput:400000,sendsPerMin:14,routeReqsPerMin:24};
+const guard={sends:[],routeHits:new Map(),lastSend:0};
+function allowSend(){
+  const now=Date.now();
+  if(now-guard.lastSend<350)return false;
+  guard.sends=guard.sends.filter(x=>now-x<60000);
+  if(guard.sends.length>=LIMITS.sendsPerMin)return false;
+  guard.sends.push(now);guard.lastSend=now;return true;
+}
+function allowRoute(id){
+  const now=Date.now();
+  const arr=(guard.routeHits.get(id)||[]).filter(x=>now-x<60000);
+  if(arr.length>=LIMITS.routeReqsPerMin){guard.routeHits.set(id,arr);return false;}
+  arr.push(now);guard.routeHits.set(id,arr);return true;
+}
+const safeUrl=u=>/^https?:\/\/[^\s"'<>]+$/i.test(String(u||""));
+const sanitizeText=(s,max)=>String(s==null?"":s).replace(/\u0000/g,"").slice(0,max||LIMITS.maxInput);
+function tailPreview(t){const s=t.slice(-340);const i=s.indexOf(" ");return (i>0&&i<40?s.slice(i+1):s).replace(/\s+/g," ").trim();}
+
+/* ---------- smart routing: task weight and mode choice ---------- */
+function taskWeight(text,atts){
+  const t=String(text).toLowerCase();
+  const size=String(text).length+(atts||[]).reduce((n,a)=>n+String(a&&a.text||"").length,0);
+  const hard=/\b(full|complete|production|advanced|architecture|multi[- ]?file|end.to.end|scalable|secure|refactor|from scratch|comprehensive|detailed|long|project|application|platform)\b/.test(t);
+  return (hard||size>1200||(atts||[]).length>0)?"full":"light";
+}
+function smartPlan(text,atts,searchOn){
+  const t=String(text).toLowerCase();
+  const weight=taskWeight(text,atts);
+  const build=/\b(build|create|make|develop|design|implement|program|code)\b/.test(t)&&
+    /\b(app|application|website|web ?site|page|game|tool|dashboard|api|backend|frontend|system|bot|extension|script|project|platform|saas|plugin|cli|service|engine|workbench|component|function|class)\b/.test(t);
+  const video=/\b(video|vid|clip|reel|animation|animate|storyboard|cinematic|text[- ]to[- ]video)\b/.test(t);
+  const image=/\b(image|photo|picture|logo|wallpaper|artwork|illustration|drawing|painting|portrait|poster|icon|sketch)\b/.test(t)&&
+    /\b(make|create|generate|draw|paint|render|design|give me|show me|produce|imagine)\b/.test(t);
+  const deepWords=/\b(deep search|deep research|deep dive|investigate|find sources|with sources|sources|latest|news|look up|research|search the web|find out)\b/.test(t);
+  const url=/https?:\/\//.test(t);
+  const reason=/\b(prove|derive|solve|calculate|theorem|equation|proof|reason)\b/.test(t);
+  if(video&&!build)return {mode:"video",verify:false,light:false,research:false,why:"video prompt pack"};
+  if(image&&!build)return {mode:"image",verify:false,light:true,research:false,why:"image generation"};
+  if(build)return {mode:"agents",verify:weight==="full",light:weight==="light",research:false,why:weight==="full"?"hard build":"build"};
+  if(deepWords||(searchOn&&weight==="full")||(url&&weight==="full"))return {mode:"deep",verify:true,light:false,research:true,why:"deep search"};
+  if(searchOn||url)return {mode:"single",verify:true,light:false,research:true,why:"web research"};
+  if(reason)return {mode:"single",verify:true,light:false,research:false,why:"reasoning"};
+  if(weight==="full")return {mode:"single",verify:true,light:false,research:false,why:"long answer"};
+  return {mode:"single",verify:false,light:true,research:false,why:"quick answer"};
+}
+
+/* ---------- custom dropdown bound to a hidden select ---------- */
+function buildDropdown(sel){
+  const wrap=el("div","dd");
+  const btn=el("button","dd-btn");btn.type="button";
+  const menu=el("div","dd-menu");menu.hidden=true;
+  for(const o of [...sel.options]){
+    const it=el("div","dd-item",o.textContent);it.dataset.v=o.value;
+    it.onclick=e=>{e.stopPropagation();sel.value=o.value;sel.dispatchEvent(new Event("change"));closeDD();refreshDD(sel);};
+    menu.appendChild(it);
+  }
+  const closeDD=()=>{menu.hidden=true;wrap.classList.remove("open");};
+  btn.onclick=e=>{e.stopPropagation();const open=menu.hidden;document.querySelectorAll(".dd.open").forEach(x=>x.dispatchEvent(new Event("dd-close")));menu.hidden=!open;wrap.classList.toggle("open",open);};
+  wrap.addEventListener("dd-close",closeDD);
+  wrap.append(btn,menu);
+  sel.hidden=true;sel.after(wrap);
+  sel._dd={wrap,btn,menu};
+  document.addEventListener("click",closeDD);
+  refreshDD(sel);
+}
+function refreshDD(sel){
+  const d=sel._dd;if(!d)return;
+  const o=[...sel.options].find(x=>x.value===sel.value);
+  d.btn.textContent=o?o.textContent:sel.value;
+  for(const it of d.menu.children)it.classList.toggle("on",it.dataset.v===sel.value);
+}
+
+/* ---------- in-browser model: no key, no account, no proxy ----------
+   Transformers.js from jsDelivr runs an ONNX model inside the page (WebGPU when available, WASM otherwise).
+   The first load downloads the weights; the browser caches them after that. */
+let LOCAL={id:"",gen:null,mod:null,loading:null};
+function cleanLocal(t){return String(t||"").replace(/<think>[\s\S]*?(<\/think>|$)/g,"").replace(/^\s+/,"");}
+function insertTpl(t){const i=$("input");i.value=t;i.focus();autosize();}
+async function loadLocal(modelId,onProgress){
+  const id=String(modelId||DEFAULT_LOCAL).trim()||DEFAULT_LOCAL;
+  if(LOCAL.gen&&LOCAL.id===id)return LOCAL.gen;
+  if(LOCAL.loading&&LOCAL.id===id)return LOCAL.loading;
+  if(typeof WebAssembly==="undefined")throw new Error("this browser has no WebAssembly");
+  LOCAL.id=id;
+  LOCAL.loading=(async()=>{
+    const mod=await import(LOCAL_TF);
+    const opts={dtype:"q4",progress_callback:p=>{if(onProgress){try{onProgress(p);}catch(e){}}}};
+    let gen=null;
+    if(navigator.gpu){try{gen=await mod.pipeline("text-generation",id,Object.assign({device:"webgpu"},opts));}catch(e){gen=null;}}
+    if(!gen)gen=await mod.pipeline("text-generation",id,opts);
+    LOCAL.gen=gen;LOCAL.mod=mod;
+    return gen;
+  })();
+  try{return await LOCAL.loading;}
+  finally{LOCAL.loading=null;}
+}
+async function runLocal(ctx,msgs){
+  const gen=await loadLocal(state.localModel,p=>{
+    if(p&&p.status==="progress"&&p.progress!=null)setStatus("Local model · downloading "+Math.round(p.progress)+"%","run");
+  });
+  if(ctx.signal.aborted)throw abortErr();
+  setStatus("Local model · generating","run");
+  const q=[];let wake=null,done=false,err=null;
+  const poke=()=>{if(wake){const w=wake;wake=null;w();}};
+  const streamer=new LOCAL.mod.TextStreamer(gen.tokenizer,{
+    skip_prompt:true,skip_special_tokens:true,
+    callback_function:t=>{if(!ctx.signal.aborted){q.push(t);poke();}}
+  });
+  const chat=msgs.map(m=>({role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}));
+  Promise.resolve(gen(chat,{max_new_tokens:700,do_sample:true,temperature:Math.max(0.1,Number(state.temperature)||0.7),streamer}))
+    .then(()=>{done=true;poke();},e=>{err=e;done=true;poke();});
+  let raw="";
+  while(true){
+    if(ctx.signal.aborted)throw abortErr();
+    if(q.length){raw+=q.shift();ctx.onText(cleanLocal(raw));continue;}
+    if(done)break;
+    await new Promise(r=>{wake=r;});
+  }
+  if(err&&!raw)throw err;
+  return {text:cleanLocal(raw).trim(),route:{label:"Local · "+state.localModel}};
+}
+/* Single with the in-browser model as the last resort (only when cloud routes all fail). */
+async function singleWithLocal(ctx,msgs){
+  try{return await runSingle(ctx,msgs);}
+  catch(e){
+    if(e.name==="AbortError"||ctx.signal.aborted||!state.localFallback)throw e;
+    setStatus("Cloud routes failed · trying the local model","run");
+    try{
+      const s=await runLocal(ctx,msgs);
+      if(!s.text)throw e;
+      return s;
+    }catch(le){throw new Error(String(e.message||e)+" · local model: "+String(le.message||le));}
+  }
+}
+
+/* ---------- streaming with idle and total timeouts ---------- */
+/* ---------- streaming with idle and total timeouts ---------- */
+async function* streamRoute(route,messages,signal,opts){
+  if(!allowRoute(route.id)){const e=new Error("local rate limit reached for "+route.label);e.name="RateLimited";throw e;}
+  const started=Date.now();
+  const ctrl=new AbortController();
+  const onAbort=()=>ctrl.abort();
+  signal.addEventListener("abort",onAbort,{once:true});
+  const idleMs=(opts&&opts.idleMs)||(route.timeout||20)*1000;
+  const totalMs=(opts&&opts.totalMs)||Math.max(idleMs*4,180000);
+  let timedOut="",idleT=null;
+  const arm=()=>{clearTimeout(idleT);idleT=setTimeout(()=>{timedOut="idle";ctrl.abort();},idleMs);};
+  const totalT=setTimeout(()=>{timedOut="total";ctrl.abort();},totalMs);
+  arm();
+  let got=false;
+  try{
+    if(route.adapter==="puter"){
+      if(!window.puter||!puter.ai||typeof puter.ai.chat!=="function")throw new Error("Puter.js is not loaded");
+      const pm=messages.map(m=>({role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}));
+      const r=await puter.ai.chat(pm,{model:route.model});
+      const content=typeof r==="string"?r:((r&&r.message&&r.message.content)||(r&&r.text)||"");
+      if(!content)throw new Error("Puter returned an empty response");
+      recordOk(route,Date.now()-started);
+      yield {type:"delta",text:String(content)};
+      yield {type:"end",finish:"stop"};
+      return;
+    }
+    if(route.adapter==="aihorde"){
+      const hh={"Content-Type":"application/json","Client-Agent":"ZTCAI:1.7.0:browser"};
+      const cat=await (await sigFetch("https://aihorde.net/api/v2/status/models?type=text&chat=true",{signal:ctrl.signal})).json();
+      const names=(Array.isArray(cat)?cat:(cat.models||[])).map(m=>m.name||m.model||m.id||m).filter(x=>typeof x==="string").slice(0,5);
+      if(!names.length)throw new Error("AI Horde has no active text models");
+      const st=await sigFetch("https://aihorde.net/api/v2/generate/chat/async",{method:"POST",headers:hh,signal:ctrl.signal,
+        body:JSON.stringify({models:names,stream:false,max_tokens:(opts&&opts.maxTokens)||700,
+          messages:messages.map(m=>({role:m.role==="developer"?"system":m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)})),
+          horde:{availability_mode:"wait",context_fit:"truncate_oldest"}})});
+      const job=await st.json();const jid=job.id||job.uuid;
+      if(!jid)throw new Error("AI Horde did not return a job id");
+      const deadline=Date.now()+Math.min(idleMs*2,85000);let text="";
+      while(Date.now()<deadline){
+        await sleep(1800);
+        const c=await (await sigFetch("https://aihorde.net/api/v2/generate/chat/status/"+encodeURIComponent(jid),{headers:{"Client-Agent":hh["Client-Agent"]},signal:ctrl.signal})).json();
+        if(c.fault_reason)throw new Error("AI Horde: "+c.fault_reason);
+        if(c.done){const g=c.generations&&c.generations[0];text=g&&g.message&&typeof g.message.content==="string"?g.message.content:"";break;}
+      }
+      if(!text)throw new Error("AI Horde timed out");
+      recordOk(route,Date.now()-started);
+      yield {type:"delta",text};
+      yield {type:"end",finish:"stop"};
+      return;
+    }
+    const headers=Object.assign({"Content-Type":"application/json"},route.headers||{});
+    const key=keyFor(route);if(key)headers.Authorization="Bearer "+key;
+    const body={model:route.model,stream:route.stream!==false&&route.provider!=="Free.ai",messages};
+    if(opts&&opts.maxTokens)body.max_tokens=opts.maxTokens;
+    body.temperature=(opts&&opts.temperature!==undefined)?opts.temperature:state.temperature;
+    const url=route.url.replace("{accountId}",encodeURIComponent(state.cloudflareAccountId||""));
+    const res=await fetchWithRetry(url,{method:"POST",headers,body:JSON.stringify(body)},ctrl.signal);
+    arm();
+    for await(const ev of readSSE(res,ctrl.signal)){
+      arm();
+      if(ev.type==="delta")got=true;
+      yield ev;
+    }
+    if(!got)throw new Error("empty stream");
+    recordOk(route,Date.now()-started);
+  }catch(e){
+    if((e.name==="AbortError"||ctrl.signal.aborted)&&!timedOut)throw abortErr();
+    if(e.name==="RateLimited")throw e;
+    let err=e;
+    if(timedOut==="idle")err=new Error("no data for "+Math.max(1,Math.round(idleMs/1000))+"s");
+    else if(timedOut==="total")err=new Error("exceeded "+Math.round(totalMs/1000)+"s");
+    recordFail(route,err);
+    throw err;
+  }finally{clearTimeout(idleT);clearTimeout(totalT);signal.removeEventListener("abort",onAbort);}
+}
+
+/*@@HEDGE@@*/
+function parseJudge(text){
+  const t=cleanModelText(text||"");const s=t.indexOf("{"),e=t.lastIndexOf("}");
+  if(s<0||e<=s)return null;
+  try{return JSON.parse(t.slice(s,e+1));}catch(err){return null;}
+}
+/* Hedged race: launches routes staggered; the first route that produces text wins and the rest are cancelled. */
+async function* hedgedStream(routes,messages,signal,opts,staggerMs){
+  if(!routes.length)throw new Error("no routes available");
+  const ctrls=new Map(),q=[];let wake=null,winner=null,failed=0,lastErr=null;
+  const push=ev=>{q.push(ev);if(wake){const w=wake;wake=null;w();}};
+  const onAbort=()=>{ctrls.forEach(c=>c.abort());push({type:"abort"});};
+  signal.addEventListener("abort",onAbort,{once:true});
+  const errs=[];
+  const fail=e=>{failed++;lastErr=e||lastErr;if(e)errs.push(String(e.message||e).slice(0,120));if(failed>=routes.length&&!winner)push({type:"allfailed",err:new Error("all routes failed · "+errs.slice(0,3).join(" | "))});};
+  routes.forEach((route,i)=>{
+    const ctrl=new AbortController();ctrls.set(route.id,ctrl);
+    (async()=>{
+      try{
+        if(i>0)await sleep(i*staggerMs);
+        if(winner||signal.aborted)return;
+        for await(const ev of streamRoute(route,messages,ctrl.signal,opts)){
+          if(winner&&winner!==route.id)return;
+          if(!winner){
+            if(ev.type!=="delta")continue;
+            winner=route.id;
+            ctrls.forEach((c,k)=>{if(k!==route.id)c.abort();});
+            push({type:"winner",route});
+          }
+          push(ev);
+        }
+        if(winner===route.id)push({type:"done"});
+        else fail(new Error("no output from "+route.label));
+      }catch(e){
+        if(winner&&winner!==route.id)return;
+        if(winner===route.id){push({type:"error",err:e});return;}
+        if(e.name==="AbortError"&&signal.aborted)return;
+        fail(e);
+      }
+    })();
+  });
+  try{
+    while(true){
+      if(!q.length){await new Promise(r=>{wake=r;});continue;}
+      const ev=q.shift();
+      if(ev.type==="abort")throw abortErr();
+      if(ev.type==="done")return;
+      if(ev.type==="error"||ev.type==="allfailed")throw ev.err;
+      yield ev;
+    }
+  }finally{
+    ctrls.forEach(c=>{try{c.abort();}catch(e){}});
+    signal.removeEventListener("abort",onAbort);
+  }
+}
+/* Sequential failover: tries routes in order; a route that already produced text is never retried. */
+async function* failoverStream(routes,messages,signal,opts){
+  let last=null;const errs=[];
+  for(const route of routes){
+    if(signal.aborted)throw abortErr();
+    let any=false;
+    try{
+      for await(const ev of streamRoute(route,messages,signal,opts)){
+        if(ev.type==="delta"&&!any){any=true;yield {type:"winner",route};}
+        yield ev;
+      }
+      if(any)return;
+      last=new Error("no output from "+route.label);errs.push(route.label+": empty output");
+    }catch(e){
+      if(e.name==="AbortError"&&signal.aborted)throw e;
+      last=e;errs.push(route.label+": "+String(e.message||e).slice(0,120));
+      if(any)throw e;
+    }
+  }
+  throw new Error(errs.length?"all routes failed · "+errs.slice(0,3).join(" | "):"no routes available");
+}
+/*@@HEDGE_END@@*/
+
+const liveStats={chars:0,think:0,t0:0,timer:null};
+function meterStart(){
+  liveStats.chars=0;liveStats.think=0;liveStats.t0=Date.now();
+  clearInterval(liveStats.timer);liveStats.timer=setInterval(()=>meterPaint(false),400);
+  meterPaint(false);
+}
+function meterStop(){clearInterval(liveStats.timer);liveStats.timer=null;meterPaint(true);}
+function meterPaint(done){
+  const m=$("meter");if(!m)return;
+  const secs=Math.max(0.2,(Date.now()-liveStats.t0)/1000);
+  const tok=Math.round(liveStats.chars/4);
+  let t=(tok/secs).toFixed(1)+" tok/s · "+tok+" tokens";
+  if(liveStats.think)t+=" · reasoning "+Math.round(liveStats.think/4);
+  if(done)t+=" · "+secs.toFixed(1)+"s";
+  m.textContent=t;
+}
+
+/* agent step: runs one role, streams into the live trace, records a result */
+function paintTraceSoon(ctx){
+  if(!ctx.el||ctx.paintQueued)return;
+  ctx.paintQueued=true;
+  requestAnimationFrame(()=>{ctx.paintQueued=false;renderTrace(ctx.el,ctx.trace,true);});
+}
+async function agentStep(ctx,role,label,routes,messages,opts){
+  const step={role,label,route:"",provider:"",status:"running",ms:0,text:"",preview:"",verdict:"",error:""};
+  ctx.trace.push(step);paintTraceSoon(ctx);
+  const t0=Date.now();let text="";
+  try{
+    if(!routes.length)throw new Error("no sendable route");
+    for await(const ev of failoverStream(routes,messages,ctx.signal,opts)){
+      if(ev.type==="winner"){step.route=ev.route.label;step.provider=ev.route.provider;}
+      else if(ev.type==="delta"){
+        text+=ev.text;liveStats.chars+=ev.text.length;
+        if(text.length>LIMITS.maxOutput)throw new Error("output exceeded the safety limit");
+        step.preview=tailPreview(text);paintTraceSoon(ctx);
+      }
+      else if(ev.type==="reasoning"){liveStats.think+=ev.text.length;}
+    }
+    step.text=cleanModelText(text).trim();
+    step.status=step.text?"done":"failed";
+    if(!step.text)step.error="empty output";
+  }catch(e){
+    if(e.name==="AbortError"&&ctx.signal.aborted)throw e;
+    step.status="failed";step.error=String(e.message||e).slice(0,240);
+  }
+  step.ms=Date.now()-t0;
+  if(step.status==="failed")step.preview=step.error;
+  paintTraceSoon(ctx);
+  return step;
+}
+
+/* ---------- orchestration modes ---------- */
+async function runAgents(ctx,task,hist){
+  const cands=eligible(ctx.intent);
+  if(!cands.length)throw new Error("No sendable routes. Add a key or enable a route in Routes.");
+  const sp=preset();
+  const pick=avoid=>orderAvoiding(cands,avoid).slice(0,8);
+  const sys=p=>({role:"system",content:p});
+  const base=[sys(ctx.system+"\n\n"+PROMPTS.builder),...hist.slice(0,-1)];
+  const lastUser=hist[hist.length-1].content;
+  let planText="";
+  if(!ctx.light){
+    const plan=await agentStep(ctx,"planner","Planner",pick([]),[sys(PROMPTS.planner),{role:"user",content:lastUser}],{maxTokens:600,temperature:0.3,idleMs:40000});
+    planText=plan.text;
+  }
+  const planBlock=planText?"\n\nPlan from the planner:\n"+planText:"";
+  const built=await agentStep(ctx,"builder","Builder",pick([]),[...base,{role:"user",content:lastUser+planBlock}],
+    {maxTokens:ctx.light?1400:3200,idleMs:70000});
+  let out=built.text,builderProv=built.provider||"",revProv="";
+  if(!out)throw new Error("Builder produced no output: "+(built.error||"unknown error"));
+  const rounds=ctx.light?0:sp.rounds;
+  for(let round=0;round<rounds;round++){
+    const rev=await agentStep(ctx,"reviewer","Reviewer "+(round+1),pick([builderProv]),
+      [sys(PROMPTS.reviewer),{role:"user",content:"TASK:\n"+lastUser+(planText?"\n\nPLAN:\n"+planText:"")+"\n\nDELIVERABLE:\n"+out}],
+      {maxTokens:700,temperature:0.2,idleMs:45000});
+    revProv=rev.provider||revProv;
+    const j=parseJudge(rev.text);
+    rev.verdict=j&&j.verdict?String(j.verdict).toUpperCase():"UNPARSED";
+    paintTraceSoon(ctx);
+    if(!j||rev.verdict!=="REVISE"||!Array.isArray(j.issues)||!j.issues.length)break;
+    const same=cands.filter(r=>r.provider===builderProv);
+    const fixRoutes=same.concat(cands.filter(r=>r.provider!==builderProv)).slice(0,8);
+    const fix=await agentStep(ctx,"builder","Builder fix "+(round+1),fixRoutes,
+      [...base,{role:"user",content:lastUser+"\n\nPrevious deliverable:\n"+out+"\n\nReviewer issues to fix:\n- "+j.issues.join("\n- ")+"\n\nReturn the full corrected deliverable."}],
+      {maxTokens:3200,idleMs:70000});
+    if(fix.text){out=fix.text;builderProv=fix.provider||builderProv;}
+  }
+  let verdict="",ver=null,final=out;
+  if(!ctx.light||ctx.verifyOn){
+    ver=await agentStep(ctx,"verifier","Verifier",pick([builderProv,revProv]),
+      [sys(PROMPTS.verifier),{role:"user",content:"TASK:\n"+lastUser+"\n\nDELIVERABLE:\n"+out}],{maxTokens:600,temperature:0.1,idleMs:40000});
+    const vj=parseJudge(ver.text);
+    verdict=vj&&vj.verdict?String(vj.verdict).toUpperCase():"UNPARSED";
+    ver.verdict=verdict;paintTraceSoon(ctx);
+    const issues=vj&&Array.isArray(vj.issues)?vj.issues.filter(Boolean):[];
+    if((verdict==="FAIL"||verdict==="WARN")&&issues.length){
+      const syn=await agentStep(ctx,"synth","Synthesizer",pick([builderProv]),
+        [sys(PROMPTS.synth),{role:"user",content:"TASK:\n"+lastUser+"\n\nDELIVERABLE:\n"+out+"\n\nVERIFIER FINDINGS:\n- "+issues.join("\n- ")+"\n\nOutput the corrected final answer only."}],
+        {maxTokens:3200,idleMs:70000});
+      if(syn.text)final=syn.text;
+    }
+  }
+  return {text:final,verdict,providers:[builderProv,revProv,ver&&ver.provider].filter(Boolean)};
+}
+
+async function runCouncil(ctx,task,hist){
+  const cands=eligible(ctx.intent);
+  if(!cands.length)throw new Error("No sendable routes. Add a key or enable a route in Routes.");
+  const heads=distinctProviders(cands,3);
+  const results=await Promise.all(heads.map((r,i)=>{
+    const backups=cands.filter(x=>x.provider!==r.provider).slice(0,2);
+    return agentStep(ctx,"draft","Draft "+(i+1),[r].concat(backups),[{role:"system",content:ctx.system},...hist],{maxTokens:1800,idleMs:50000});
+  }));
+  const good=results.filter(s=>s.text);
+  if(!good.length)throw new Error("Council: no draft produced output. "+results.map(s=>s.error).filter(Boolean).slice(0,2).join("; "));
+  if(good.length===1)return {text:good[0].text,providers:[good[0].provider]};
+  const used=good.map(g=>g.provider);
+  const prompt="Several independent answers to the same request follow. Compare them, resolve disagreements, remove unsupported claims and keep the best detail. Output one complete answer.\n\n"+
+    good.map((g,i)=>"--- Answer "+(i+1)+" ("+g.route+") ---\n"+g.text).join("\n\n")+"\n\n--- Request ---\n"+task;
+  const syn=await agentStep(ctx,"synth","Synthesizer",orderAvoiding(cands,used).slice(0,8),
+    [{role:"system",content:ctx.system},{role:"user",content:prompt}],{maxTokens:3200,idleMs:70000});
+  return {text:syn.text||good[0].text,providers:used};
+}
+
+async function runSingle(ctx,msgs){
+  const sp=preset();
+  const routes=eligible(ctx.intent).slice(0,sp.maxRoutes);
+  if(!routes.length)throw new Error("No sendable routes. Add a key or enable a route in Routes.");
+  let out="",winner=null;const conts=[];
+  for(let round=0;round<sp.contRounds;round++){
+    let got="",finish=null;
+    const send=conts.length?msgs.concat(conts):msgs;
+    for await(const ev of hedgedStream(routes,send,ctx.signal,{idleMs:45000},sp.stagger)){
+      if(ev.type==="winner")winner=ev.route;
+      else if(ev.type==="delta"){
+        got+=ev.text;liveStats.chars+=ev.text.length;
+        if(out.length+got.length>LIMITS.maxOutput)throw new Error("output exceeded the safety limit");
+        ctx.onText(cleanModelText(out+got));
+      }
+      else if(ev.type==="reasoning")liveStats.think+=ev.text.length;
+      else if(ev.type==="end")finish=ev.finish;
+    }
+    out+=got;
+    if(!needsContinue(got,finish))break;
+    conts.push({role:"assistant",content:got},{role:"user",content:"Continue exactly from where you stopped. Do not repeat any text already written."});
+  }
+  return {text:cleanModelText(out).trim(),route:winner};
+}
+function needsContinue(text,finish){
+  if(!text)return false;
+  if(finish==="length"||finish==="max_tokens")return true;
+  return (text.match(/```/g)||[]).length%2===1;
+}
+
+/* ---------- research (keyless: Jina reader for URLs, Wikipedia for search) ---------- */
+async function research(text,searchOn,signal,deep){
+  const sources=[],extra=[];
+  const urls=(text.match(/https?:\/\/[^\s)"'<>]+/g)||[]).slice(0,2);
+  for(const u of urls){
+    try{
+      const r=await sigFetch("https://r.jina.ai/"+u,{headers:{Accept:"text/plain"},signal});
+      if(r.ok){const body=(await r.text()).slice(0,6000);extra.push("[Page: "+u+"]\n"+body);sources.push({title:u,url:u});}
+    }catch(e){if(signal.aborted)throw abortErr();}
+  }
+  const q=text.replace(/https?:\/\/\S+/g,"").replace(/\s+/g," ").trim().slice(0,200);
+  if(searchOn&&q){
+    try{
+      const lim=deep?8:4;
+      const url="https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent(q)+
+        "&gsrlimit="+lim+"&prop=extracts|info&inprop=url&exintro=1&explaintext=1&exlimit=max&format=json&origin=*";
+      const j=await (await sigFetch(url,{signal})).json();
+      const pages=Object.values((j.query&&j.query.pages)||{}).sort((a,b)=>a.index-b.index);
+      for(const p of pages){extra.push("[Source: "+p.title+" ("+p.fullurl+")]\n"+String(p.extract||"").slice(0,deep?1200:1500));sources.push({title:p.title,url:p.fullurl});}
+      if(deep){
+        const top=pages.slice(0,3).filter(p=>safeUrl(p.fullurl));
+        await Promise.all(top.map(async p=>{
+          try{
+            const r=await sigFetch("https://r.jina.ai/"+p.fullurl,{headers:{Accept:"text/plain"},signal});
+            if(r.ok){const body=(await r.text()).slice(0,4000);extra.push("[Full page: "+p.title+"]\n"+body);}
+          }catch(e){if(signal.aborted)throw abortErr();}
+        }));
+      }
+    }catch(e){if(signal.aborted)throw abortErr();}
+  }
+  return {extra,sources};
+}
+
+/* ---------- message building ---------- */
+function intentOf(t){
+  const q=String(t||"");
+  if(/```|\b(code|function|class|bug|error|stack ?trace|typescript|javascript|python|html|css|api|script|refactor|compile|debug|sql)\b|\.(js|ts|py|html|css|json|sql)\b/i.test(q))return "code";
+  if(/\b(prove|derive|solve|calculate|integral|equation|theorem|step by step|reason|logic|math|formula)\b/i.test(q))return "reasoning";
+  if(/\b(search|research|look up|find sources|deep dive|latest|current information|compare providers|verify online|browse the web)\b/i.test(q))return "search";
+  if(/\b(design|redesign|ui|ux|interface|dashboard|landing page|wireframe|prototype|visual style|layout|theme|frontend design|high.?tech)\b/i.test(q))return "design";
+  if(/\b(write|draft|compose|story|poem|caption|speech|essay|creative|brainstorm|generate ideas)\b/i.test(q))return "creative";
+  return "general";
+}
+function userContent(m,extra){
+  let s=m.content||"";
+  for(const a of m.attachments||[])s+="\n\n[File: "+a.name+"]\n```\n"+a.text+"\n```";
+  if(extra&&extra.length)s="Use the research below when relevant and name the sources you use.\n\n"+extra.join("\n\n")+"\n\nRequest:\n"+s;
+  return s;
+}
+function historyFor(chat,max){
+  max=max||28000;
+  const all=chat.messages.filter(m=>m.role==="user"||m.role==="assistant")
+    .map(m=>({role:m.role,content:m.role==="user"?userContent(m,null):(m.content||"")}));
+  const out=[];let total=0;
+  for(let i=all.length-1;i>=0;i--){
+    total+=all[i].content.length;
+    if(out.length&&total>max)break;
+    out.unshift(all[i]);
+  }
+  return out;
+}
+
+/* ---------- generation ---------- */
+const MODE_NAME={auto:"Auto",agents:"Agents",council:"Council",single:"Single",image:"Image",video:"Video prompt",deep:"Deep search",local:"Local model"};
+const VIDEO_SYSTEM="You are an expert AI video director. Produce a production-ready text-to-video prompt pack with these sections: Logline; Shot list (each shot with its duration in seconds); Visual style (lens, lighting, color palette); Camera motion per shot; Subject and action details; Audio cues; Negative prompt. Be specific, vivid and concise.";
+const imageUrl=p=>"https://image.pollinations.ai/prompt/"+encodeURIComponent(sanitizeText(p,900))+"?width=1024&height=1024&nologo=true&seed="+Math.floor(Math.random()*1e6);
+async function generate(chat,userMsg,opt){
+  runtime.busy=true;setBusy(true);
+  const ctl=new AbortController();runtime.ctl=ctl;
+  const atts=userMsg.attachments||[];
+  const plan=opt.mode==="auto"?smartPlan(userMsg.content,atts,opt.searchOn):
+    {mode:opt.mode,verify:false,light:taskWeight(userMsg.content,atts)==="light",research:false,why:"manual"};
+  if(opt.verifyOn&&plan.mode!=="image")plan.verify=true;
+  const mode=plan.mode;
+  const intent=intentOf(userMsg.content+" "+atts.map(a=>a.name).join(" "));
+  const bubble=el("div","msg assistant streaming");
+  const traceEl=el("div"),bodyEl=el("div","body");
+  bubble.append(traceEl,bodyEl);
+  $("messages").appendChild(bubble);scrollEnd();
+  const ctx={signal:ctl.signal,intent,trace:[],el:traceEl,paintQueued:false,partial:"",textQ:false,
+    light:mode==="agents"&&plan.light===true,verifyOn:!!plan.verify,
+    system:(intent==="code"?CODE_SYSTEM+"\n\n":"")+(state.system||SYSTEM_DEFAULT),
+    onText:t=>{ctx.partial=t;if(!ctx.textQ){ctx.textQ=true;requestAnimationFrame(()=>{ctx.textQ=false;bodyEl.textContent=ctx.partial;scrollEnd();});}}};
+  const meta={provider:"",sources:[],verdict:"",stopped:false,image:""};
+  let answer="",errMsg="";
+  setStatus((opt.mode==="auto"?"Auto → ":"")+MODE_NAME[mode]+" · "+plan.why,"run");
+  meterStart();
+  try{
+    if(mode==="image"){
+      meta.image=imageUrl(userMsg.content);
+      meta.provider="Pollinations image";
+      answer="Image generated for: "+userMsg.content;
+    }else{
+      const r=await research(userMsg.content,opt.searchOn||plan.research,ctl.signal,mode==="deep");
+      meta.sources=r.sources;
+      const hist=historyFor(chat);
+      const task=userContent(userMsg,r.extra);
+      hist[hist.length-1]={role:"user",content:task};
+      if(mode==="agents"){
+        setStatus("Agents · "+(ctx.light?"fast build":"full pipeline"),"run");
+        let a;
+        try{a=await runAgents(ctx,task,hist);}
+        catch(err){
+          if(err.name==="AbortError"||ctl.signal.aborted||!state.autoFallback)throw err;
+          setStatus("Agents failed · retrying as Single","run");
+          const s=await singleWithLocal(ctx,[{role:"system",content:ctx.system},...hist]);
+          if(!s.text)throw err;
+          a={text:s.text,verdict:"",providers:["fallback · "+(s.route?s.route.label:"single")]};
+        }
+        answer=a.text;meta.verdict=a.verdict;meta.provider="agents · "+a.providers.join(" > ");
+      }else if(mode==="council"||(mode==="deep"&&eligible(intent).length>=3)){
+        setStatus("Council · synthesizing sources","run");
+        let c;
+        try{c=await runCouncil(ctx,task,hist);}
+        catch(err){
+          if(err.name==="AbortError"||ctl.signal.aborted||!state.autoFallback)throw err;
+          setStatus("Council failed · retrying as Single","run");
+          const s=await singleWithLocal(ctx,[{role:"system",content:ctx.system},...hist]);
+          if(!s.text)throw err;
+          c={text:s.text,providers:["fallback · "+(s.route?s.route.label:"single")]};
+        }
+        answer=c.text;meta.provider="council · "+c.providers.length+" drafts";
+      }else{
+        const sysPrompt=mode==="video"?VIDEO_SYSTEM+"\n\n"+ctx.system:ctx.system;
+        setStatus(mode==="video"?"Video prompt director":mode==="deep"?"Deep search · single":mode==="local"?"Local model":"Single · hedged race","run");
+        const s=mode==="local"?await runLocal(ctx,[{role:"system",content:sysPrompt},...hist]):await singleWithLocal(ctx,[{role:"system",content:sysPrompt},...hist]);
+        answer=s.text;meta.provider=s.route?s.route.label:"";
+        if(plan.verify&&answer){
+          setStatus("Verifier","run");
+          const v=await agentStep(ctx,"verifier","Verifier",orderAvoiding(eligible(intent),s.route?[s.route.provider]:[]).slice(0,8),
+            [{role:"system",content:PROMPTS.verifier},{role:"user",content:"TASK:\n"+task+"\n\nDELIVERABLE:\n"+answer}],{maxTokens:600,temperature:0.1,idleMs:40000});
+          const j=parseJudge(v.text);v.verdict=j&&j.verdict?String(j.verdict).toUpperCase():"UNPARSED";
+          meta.verdict=v.verdict;
+        }
+      }
+      if(mode==="video"&&answer)meta.image=imageUrl("cinematic first frame, "+userMsg.content);
+    }
+    if(!answer.trim())throw new Error("The models returned an empty answer.");
+  }catch(e){
+    if(e.name==="AbortError"||ctl.signal.aborted){answer=ctx.partial||"";meta.stopped=true;}
+    else{errMsg=e.message||String(e);if(/Failed to fetch/.test(errMsg))errMsg+=" · the browser blocked the cloud calls (CORS) or you are offline. Try Local mode.";}
+  }
+  bubble.remove();
+  const now=Date.now();
+  if(errMsg){
+    chat.messages.push({role:"error",content:"Error: "+errMsg,t:now});
+    setStatus("Failed","bad");
+  }else if(answer.trim()||ctx.trace.length||meta.image){
+    chat.messages.push({role:"assistant",content:answer.trim()||"(stopped before output)",provider:meta.provider,
+      verdict:meta.verdict,sources:meta.sources,image:meta.image||undefined,mode,t:now,
+      trace:ctx.trace.map(s=>({label:s.label,role:s.role,route:s.route,provider:s.provider,status:s.status,ms:s.ms,verdict:s.verdict,error:s.error}))});
+    setStatus(meta.stopped?"Stopped":"Done · "+MODE_NAME[mode],meta.stopped?"":"ok");
+  }else setStatus("Stopped","");
+  runtime.busy=false;runtime.ctl=null;setBusy(false);meterStop();
+  if(chat.title==="New chat"&&userMsg.content)chat.title=userMsg.content.slice(0,56);
+  saveSoon();renderSidebar();
+  const last=chat.messages[chat.messages.length-1];
+  if(last&&last.role!=="user"){$("messages").appendChild(messageNode(last,chat.messages.length-1));scrollEnd();}
+}
+
+async function sendFromInput(){
+  if(runtime.busy)return;
+  const chat=activeChat();if(!chat)return;
+  const input=$("input");
+  const raw=input.value.trim();
+  if(raw.length>LIMITS.maxInput){toast("Message too long. Limit is "+LIMITS.maxInput+" characters.");return;}
+  let text=sanitizeText(raw);
+  if(!text&&!runtime.pending.length)return;
+  if(!allowSend()){toast("Slow down: too many requests in a short time.");return;}
+  if(text.startsWith("/img ")){input.value="";autosize();generateImage(text.slice(5).trim(),chat);return;}
+  let mode=state.mode,searchOn=$("togSearch").checked,verifyOn=$("togVerify").checked;
+  const cmd=text.match(/^\/(search|agents|council|single|auto|verify|image|video|deep|local)\s+/);
+  if(cmd){
+    if(cmd[1]==="search")searchOn=true;
+    else if(cmd[1]==="verify")verifyOn=true;
+    else mode=cmd[1];
+    text=text.slice(cmd[0].length).trim();
+  }
+  if(text==="/continue")text="Continue exactly from where the last answer stopped. Do not repeat any text already written.";
+  if(!text&&!runtime.pending.length)return;
+  const userMsg={role:"user",content:text||"(files)",attachments:runtime.pending.splice(0),t:Date.now()};
+  chat.messages.push(userMsg);
+  input.value="";autosize();renderFiles();renderMessages();saveSoon();
+  try{await generate(chat,userMsg,{mode,searchOn,verifyOn});}
+  catch(e){toast("Error: "+(e.message||e));}
+  finally{if(runtime.busy){runtime.busy=false;runtime.ctl=null;setBusy(false);meterStop();}}
+}
+function generateImage(prompt,chat){
+  if(!prompt){toast("Describe the image after /img");return;}
+  const seed=Math.floor(Math.random()*1e6);
+  const url="https://image.pollinations.ai/prompt/"+encodeURIComponent(prompt)+"?width=1024&height=1024&nologo=true&seed="+seed;
+  chat.messages.push({role:"user",content:"/img "+prompt,t:Date.now()});
+  chat.messages.push({role:"assistant",content:"Generated image for: "+prompt,image:url,provider:"Pollinations image"});
+  saveSoon();renderMessages();
+}
+function regenerate(idx){
+  if(runtime.busy)return;
+  const chat=activeChat();if(!chat)return;
+  let u=idx-1;while(u>=0&&chat.messages[u].role!=="user")u--;
+  if(u<0)return;
+  const userMsg=chat.messages[u];
+  chat.messages=chat.messages.slice(0,u+1);
+  saveSoon();renderMessages();
+  generate(chat,userMsg,{mode:state.mode,searchOn:$("togSearch").checked,verifyOn:$("togVerify").checked});
+}
+function editUser(idx){
+  if(runtime.busy)return;
+  const chat=activeChat();if(!chat)return;
+  const m=chat.messages[idx];
+  $("input").value=m.content;runtime.pending=(m.attachments||[]).slice();
+  chat.messages=chat.messages.slice(0,idx);
+  saveSoon();renderFiles();renderMessages();autosize();$("input").focus();
+}
+
+function speakText(t){
+  try{speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(cleanModelText(t).replace(/[*`#]/g,"").slice(0,4000)));}
+  catch(e){toast("Speech is not available here");}
+}
+function deleteMsg(i){
+  if(runtime.busy)return;const c=activeChat();if(!c)return;
+  c.messages.splice(i,1);saveSoon();renderMessages();
+}
+
+/* ---------- rendering ---------- */
+function renderAll(){renderSidebar();renderMessages();syncModes();}
+function scrollEnd(){const b=$("messages");b.scrollTop=b.scrollHeight;}
+function setStatus(text,kind){const p=$("status");p.textContent=text;p.className="pill"+(kind?" "+kind:"");}
+function setBusy(b){$("sendBtn").hidden=b;$("stopBtn").hidden=!b;$("input").disabled=false;}
+function syncModes(){
+  for(const b of $("modes").querySelectorAll("button"))b.classList.toggle("on",b.dataset.mode===state.mode);
+  $("speed").value=state.speed;refreshDD($("speed"));
+  $("togSearch").checked=!!state.search;$("togVerify").checked=!!state.verify;
+}
+function renderSidebar(){
+  const pl=$("projects");pl.textContent="";
+  for(const p of state.projects){
+    const it=el("div","item"+(p.id===state.activeProject?" on":""));
+    it.appendChild(el("span",null,p.name));
+    const x=el("button","x","×");
+    x.onclick=e=>{e.stopPropagation();
+      if(state.projects.length<2){toast("Keep at least one project");return;}
+      if(!confirm("Delete project \""+p.name+"\" and all its chats?"))return;
+      state.projects=state.projects.filter(q=>q.id!==p.id);
+      if(state.activeProject===p.id){const f=state.projects[0];state.activeProject=f.id;if(!f.chats.length)f.chats.push(newChat());state.activeChat=f.chats[0].id;}
+      saveSoon();renderAll();};
+    it.append(x);
+    it.onclick=()=>{if(runtime.busy){toast("Stop the response first");return;}state.activeProject=p.id;if(!p.chats.length)p.chats.push(newChat());state.activeChat=p.chats[0].id;saveSoon();renderAll();};
+    pl.appendChild(it);
+  }
+  const cl=$("chats");cl.textContent="";
+  const p=activeProject();if(!p)return;
+  const f=($("filter").value||"").toLowerCase();
+  for(const c of p.chats){
+    if(f&&!c.title.toLowerCase().includes(f)&&!c.messages.some(m=>String(m.content||"").toLowerCase().includes(f)))continue;
+    const it=el("div","item"+(c.id===state.activeChat?" on":""));
+    it.appendChild(el("span",null,c.title));
+    const x=el("button","x","×");
+    x.onclick=e=>{e.stopPropagation();
+      if(runtime.busy&&c.id===state.activeChat){toast("Stop the response first");return;}
+      p.chats=p.chats.filter(q=>q.id!==c.id);
+      if(state.activeChat===c.id){if(!p.chats.length)p.chats.push(newChat());state.activeChat=p.chats[0].id;}
+      saveSoon();renderAll();};
+    it.append(x);
+    it.onclick=()=>{if(runtime.busy){toast("Stop the response first");return;}state.activeChat=c.id;$("side").classList.remove("open");saveSoon();renderAll();};
+    cl.appendChild(it);
+  }
+}
+let renderedChatId=null,renderLimit=120;
+function renderMessages(){
+  const box=$("messages");box.textContent="";
+  const chat=activeChat();
+  $("chatTitle").textContent=chat?chat.title:"";
+  if(!chat)return;
+  if(renderedChatId!==chat.id){renderedChatId=chat.id;renderLimit=120;}
+  const total=chat.messages.length,start=Math.max(0,total-renderLimit);
+  if(start>0){
+    const older=el("button","load-older","Load "+Math.min(100,start)+" older messages · "+start+" hidden");
+    older.type="button";older.onclick=()=>{const oldHeight=box.scrollHeight;renderLimit=Math.min(total,renderLimit+100);renderMessages();const delta=box.scrollHeight-oldHeight;box.scrollTop=Math.max(0,delta);};
+    box.appendChild(older);
+  }
+  for(let i=start;i<total;i++)box.appendChild(messageNode(chat.messages[i],i));
+  scrollEnd();
+}
+function messageNode(m,i){
+  const d=el("div","msg "+(m.role==="assistant"?"assistant":m.role==="error"?"error":"user"));
+  if(m.t&&Date.now()-m.t<4000)d.classList.add("fresh");
+  if(m.role==="user"){
+    d.appendChild(document.createTextNode(m.content));
+    if(m.attachments&&m.attachments.length)d.appendChild(filesRow(m.attachments));
+    const acts=el("div","acts");
+    const cp=el("button",null,"copy");cp.onclick=()=>copy(m.content,cp);
+    const ed=el("button",null,"edit");ed.onclick=()=>editUser(i);
+    acts.append(cp,ed);d.appendChild(acts);
+  }else if(m.role==="error"){
+    d.appendChild(el("div",null,m.content));
+    const acts=el("div","acts show");
+    const rt=el("button","primary sm","retry");rt.onclick=()=>regenerate(i);
+    acts.appendChild(rt);d.appendChild(acts);
+  }else{
+    if(m.trace&&m.trace.length){const t=el("div");renderTrace(t,m.trace,false);d.appendChild(t);}
+    if(m.image&&safeUrl(m.image)){
+      const img=el("img","gen-img");img.src=m.image;img.loading="lazy";img.alt=String(m.content).slice(0,120);
+      img.onerror=()=>{img.alt="Image failed to load. Use Regenerate to try again.";img.classList.add("broken");};
+      const a=el("a","gen-link","open full size");a.href=m.image;a.target="_blank";a.rel="noopener noreferrer";
+      d.append(img,a);
+    }
+    if(m.mode!=="image")renderRich(d,m.content||"");
+    const meta=el("div","meta");
+    if(m.mode&&MODE_NAME[m.mode])meta.appendChild(el("span","tag mode",MODE_NAME[m.mode]));
+    if(m.provider)meta.appendChild(el("span","tag",m.provider));
+    if(m.verdict){
+      const cls=m.verdict==="PASS"?"v-pass":m.verdict==="FAIL"?"v-fail":m.verdict==="WARN"?"v-warn":"";
+      meta.appendChild(el("span","tag "+cls,"verifier "+m.verdict.toLowerCase()));
+    }
+    for(const s of m.sources||[]){
+      if(!safeUrl(s.url))continue;
+      const a=el("a","tag",String(s.title).slice(0,40));a.href=s.url;a.target="_blank";a.rel="noopener noreferrer";meta.appendChild(a);
+    }
+    d.appendChild(meta);
+    const acts=el("div","acts");
+    const cp=el("button",null,"copy");cp.onclick=()=>copy(m.content||"",cp);
+    const rg=el("button",null,"regenerate");rg.onclick=()=>regenerate(i);
+    const sp=el("button",null,"speak");sp.onclick=()=>speakText(m.content||"");
+    const dl2=el("button",null,"delete");dl2.onclick=()=>deleteMsg(i);
+    acts.append(cp,rg,sp,dl2);d.appendChild(acts);
+  }
+  return d;
+}
+
+function filesRow(list){const row=el("div","files");for(const f of list)row.appendChild(el("span","fchip",f.name));return row;}
+function renderFiles(){
+  const box=$("files");box.textContent="";
+  runtime.pending.forEach((f,i)=>{
+    const chip=el("div","fchip");
+    chip.appendChild(el("span",null,f.name+" · "+Math.max(1,Math.round(f.text.length/1024))+" KB"));
+    const x=el("button",null,"×");x.onclick=()=>{runtime.pending.splice(i,1);renderFiles();};
+    chip.appendChild(x);box.appendChild(chip);
+  });
+  box.hidden=!runtime.pending.length;
+}
+function renderTrace(container,trace,live){
+  if(!trace||!trace.length){container.textContent="";container._tv=null;return;}
+  let v=container._tv;
+  if(!live||!v||v.n!==trace.length){
+    container.textContent="";
+    const pipe=el("div","pipe");const det=el("details","trace");det.open=!!live;
+    const sum=el("summary");det.appendChild(sum);
+    container.append(pipe,det);
+    v={n:trace.length,pipe,det,sum,stages:[],rows:[]};
+    for(let i=0;i<trace.length;i++){
+      const st=el("span","stage");st.append(el("i"),el("span","sn"),el("span","vd"));pipe.appendChild(st);v.stages.push(st);
+      const row=el("div","tstep");row.append(el("span","tn"),el("span","tr"),el("span","ts"));
+      const pre=el("pre");pre.hidden=true;row.appendChild(pre);det.appendChild(row);v.rows.push({row,pre});
+    }
+    container._tv=live?v:null;
+  }
+  trace.forEach((s,i)=>{
+    const st=v.stages[i];
+    const cls=s.status==="running"?"run":s.status==="failed"?"fail":s.status==="done"?"done":"";
+    if(st.className!=="stage "+cls)st.className="stage "+cls;
+    st.querySelector(".sn").textContent=s.label;
+    st.querySelector(".vd").textContent=s.verdict?s.verdict.toLowerCase():"";
+    const r=v.rows[i];
+    r.row.children[0].textContent=s.label;
+    r.row.children[1].textContent=s.route||s.provider||"no route";
+    r.row.children[2].textContent=s.status==="running"?"running":s.status==="failed"?"failed":((s.ms||0)/1000).toFixed(1)+"s";
+    const txt=s.status==="failed"?s.error:s.preview;
+    r.pre.hidden=!txt;
+    if(r.pre.textContent!==(txt||""))r.pre.textContent=txt||"";
+  });
+  v.sum.textContent="Agent trace · "+trace.length+" step"+(trace.length===1?"":"s")+(live?" · live":"");
+}
+function renderRich(container,raw){
+  const text=cleanModelText(raw);
+  const re=/```([\w+#.-]*)\r?\n?([\s\S]*?)```/g;
+  let last=0,m;
+  const prose=s=>{if(!s||!s.trim())return;const w=el("div","body md");renderProse(w,s);container.appendChild(w);};
+  while((m=re.exec(text))!==null){
+    prose(text.slice(last,m.index));
+    container.appendChild(codeBlock((m[1]||"txt").toLowerCase(),m[2]));
+    last=m.index+m[0].length;
+  }
+  prose(text.slice(last));
+}
+function mdTable(rows){
+  const cells=r=>r.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(x=>x.trim());
+  const head=cells(rows[0]);const body=rows.slice(2).map(cells);
+  const t=document.createElement("table");const thead=document.createElement("thead");const hr=document.createElement("tr");
+  for(const h of head){const c=document.createElement("th");appendInline(c,h);hr.appendChild(c);}
+  thead.appendChild(hr);t.appendChild(thead);
+  const tb=document.createElement("tbody");
+  for(const r of body){const tr=document.createElement("tr");for(let k=0;k<head.length;k++){const c=document.createElement("td");appendInline(c,r[k]||"");tr.appendChild(c);}tb.appendChild(tr);}
+  t.appendChild(tb);const wrap=document.createElement("div");wrap.className="tbl";wrap.appendChild(t);return wrap;
+}
+function renderProse(el2,text){
+  let list=null;
+  const lines=String(text).split("\n");
+  for(let li=0;li<lines.length;li++){
+    const raw=lines[li];
+    const line=raw.replace(/\s+$/,"");
+    if(/^\s*\|.*\|\s*$/.test(line)&&li+1<lines.length&&/^\s*\|?\s*:?-{2,}/.test(lines[li+1])){
+      list=null;let j=li;const rows=[];
+      while(j<lines.length&&/^\s*\|.*\|\s*$/.test(lines[j])){rows.push(lines[j]);j++;}
+      el2.appendChild(mdTable(rows));li=j-1;continue;
+    }
+    let m=line.match(/^(#{1,6})\s+(.*)$/);
+    if(m){list=null;const h=document.createElement(m[1].length<=1?"h3":m[1].length===2?"h4":"h5");appendInline(h,m[2]);el2.appendChild(h);continue;}
+    m=line.match(/^\s*[-*]\s+(.*)$/);
+    if(m){if(!list){list=document.createElement("ul");el2.appendChild(list);}const li=document.createElement("li");appendInline(li,m[1]);list.appendChild(li);continue;}
+    if(!line.trim()){list=null;continue;}
+    list=null;
+    const p=document.createElement("p");appendInline(p,line);el2.appendChild(p);
+  }
+}
+function appendInline(node,s){
+  const re=/(\*\*[^*\n]+\*\*|`[^`\n]+`|\*[^*\s][^*\n]*\*)/g;
+  let last=0,m;
+  while((m=re.exec(s))!==null){
+    if(m.index>last)node.appendChild(document.createTextNode(s.slice(last,m.index)));
+    const t=m[0];let n;
+    if(t.startsWith("**")){n=document.createElement("strong");n.textContent=t.slice(2,-2);}
+    else if(t.startsWith("`")){n=document.createElement("code");n.textContent=t.slice(1,-1);}
+    else{n=document.createElement("em");n.textContent=t.slice(1,-1);}
+    node.appendChild(n);last=m.index+t.length;
+  }
+  if(last<s.length)node.appendChild(document.createTextNode(s.slice(last)));
+}
+function codeBlock(lang,code){
+  const wrap=el("div","code");
+  const bar=el("div","codebar");
+  bar.appendChild(el("span","lang",lang));
+  const cp=el("button",null,"copy");cp.onclick=()=>copy(code,cp);
+  const dl=el("button",null,"download");dl.onclick=()=>downloadText(code,"snippet."+(EXT[lang]||"txt"));
+  bar.append(cp,dl);
+  const ta=el("textarea");ta.readOnly=true;ta.spellcheck=false;ta.value=code;
+  ta.style.height=Math.min(Math.max(80,code.split("\n").length*19+22),420)+"px";
+  if(lang==="js"||lang==="javascript"||lang==="html"){
+    const out=el("pre","runout");out.hidden=true;
+    const run=el("button",null,lang==="html"?"preview":"run");
+    run.onclick=()=>{if(lang==="html"){previewHtml(code);return;}out.hidden=false;runJs(code,out);};
+    bar.appendChild(run);
+    wrap.append(bar,ta,out);
+  }else wrap.append(bar,ta);
+  return wrap;
+}
+function runJs(code,out){
+  out.textContent="running";
+  const id=uid();
+  const frame=el("iframe");frame.setAttribute("sandbox","allow-scripts");frame.hidden=true;
+  const lines=[];
+  const onMsg=e=>{
+    if(e.source!==frame.contentWindow||!e.data||e.data.ztc!==id)return;
+    if(e.data.line==="[finished]")return;
+    if(lines.length<400)lines.push(String(e.data.line).slice(0,2000));
+    out.textContent=lines.join("\n")||"(no output)";
+  };
+  window.addEventListener("message",onMsg);
+  const safe=String(code).slice(0,60000).replace(/<\/script/gi,"<\\/script");
+  frame.srcdoc="<!doctype html><meta charset=\"utf-8\"><script>(function(){var id="+JSON.stringify(id)+";function s(t){parent.postMessage({ztc:id,line:String(t)},\"*\");}"+
+    "console.log=function(){s(Array.prototype.map.call(arguments,function(a){return typeof a===\"object\"?JSON.stringify(a):String(a);}).join(\" \"));};"+
+    "console.error=console.log;window.onerror=function(m){s(\"Error: \"+m);};})();<\/script><script>\n"+safe+"\n<\/script><script>parent.postMessage({ztc:"+JSON.stringify(id)+",line:\"[finished]\"},\"*\");<\/script>";
+  document.body.appendChild(frame);
+  setTimeout(()=>{window.removeEventListener("message",onMsg);frame.remove();if(!lines.length)out.textContent="(no output)";},6000);
+}
+function previewHtml(code){const url=URL.createObjectURL(new Blob([code],{type:"text/html"}));window.open(url,"_blank","noopener");setTimeout(()=>URL.revokeObjectURL(url),60000);}
+function downloadText(text,name){
+  const a=el("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/plain;charset=utf-8"}));a.download=name;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+}
+async function copy(text,btn){
+  try{await navigator.clipboard.writeText(text);}
+  catch(e){const t=el("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();}
+  if(btn){const o=btn.textContent;btn.textContent="copied";setTimeout(()=>{btn.textContent=o;},1100);}
+}
+function autosize(){const t=$("input");t.style.height="auto";t.style.height=Math.min(t.scrollHeight,200)+"px";}
+
+/* ---------- modals ---------- */
+function openModal(title,body,onClose){
+  const box=$("modal");box.textContent="";
+  const head=el("h3",null,title);const x=el("button",null,"close");x.onclick=closeModal;head.appendChild(x);
+  box.append(head,body);$("overlay").hidden=false;runtime.modalClose=onClose||null;
+}
+function closeModal(){$("overlay").hidden=true;if(runtime.modalClose)runtime.modalClose();runtime.modalClose=null;}
+function field(label,node){const d=el("div","field");d.append(el("label",null,label),node);return d;}
+function inputOf(type,value,ph){const i=el("input");i.type=type;i.value=value||"";if(ph)i.placeholder=ph;return i;}
+function openSettings(){
+  const body=el("div");
+  const sys=el("textarea");sys.rows=4;sys.value=state.system||"";
+  sys.oninput=()=>{state.system=sys.value.slice(0,4000)||SYSTEM_DEFAULT;saveSoon();};
+  const cf=inputOf("text",state.cloudflareAccountId,"Cloudflare account ID");
+  cf.oninput=()=>{state.cloudflareAccountId=cf.value.trim().slice(0,80);refreshRoutes();saveSoon();};
+  const relayUrl=inputOf("url",state.proxyUrl,"https://your-project.vercel.app/api/relay");
+  relayUrl.onchange=()=>{const v=relayUrl.value.trim();if(v){try{const u=new URL(v);if(u.protocol!=="https:"||u.username||u.password)throw new Error("HTTPS URL required");state.proxyUrl=u.href;}catch(e){toast("Relay URL must be a valid HTTPS URL");relayUrl.value=state.proxyUrl;return;}}else state.proxyUrl="";saveSoon();};
+  const relayToken=inputOf("password",state.proxyToken,"Relay secret token");relayToken.autocomplete="off";
+  relayToken.onchange=()=>{state.proxyToken=relayToken.value.trim().slice(0,300);saveSoon();};
+  const relayToggle=el("label","chk");const relayCheck=el("input");relayCheck.type="checkbox";relayCheck.checked=!!state.proxyEnabled;
+  relayCheck.onchange=()=>{if(relayCheck.checked&&(!state.proxyUrl||!state.proxyToken)){relayCheck.checked=false;toast("Set your relay URL and secret token first");return;}state.proxyEnabled=relayCheck.checked;saveSoon();toast(state.proxyEnabled?"CORS relay enabled for network requests":"Direct API requests enabled");};
+  relayToggle.append(relayCheck,document.createTextNode("Route API and research requests through my CORS relay"));
+  const relayTest=el("button",null,"Test relay connection");
+  relayTest.onclick=async()=>{if(!state.proxyUrl||!state.proxyToken){toast("Enter the Worker URL and secret token first");return;}relayTest.disabled=true;relayTest.textContent="testing…";try{const h=new URL("?health=1",state.proxyUrl).href;const health=await fetch(h,{cache:"no-store"});if(!health.ok)throw new Error("Relay health HTTP "+health.status);const j=await health.json();if(!j.ok)throw new Error("Worker health check failed");const r=await fetch(state.proxyUrl,{method:"GET",cache:"no-store",headers:{"X-Target-URL":"https://en.wikipedia.org/robots.txt","X-Relay-Token":state.proxyToken}});if(!r.ok)throw new Error("Authenticated relay HTTP "+r.status+" · check secret and allowlist");toast("Relay online · CORS + token + upstream passed");}catch(e){toast("Relay test failed: "+e.message);}finally{relayTest.disabled=false;relayTest.textContent="Test relay connection";}};
+  const relayNote=el("div","muted","Deploy this app to Vercel with the included /api/relay.js function. Add RELAY_TOKEN as a Vercel Environment Variable and redeploy. Optionally add ALLOWED_HOSTS (comma-separated extra provider domains). Set the relay URL to https://YOUR-PROJECT.vercel.app/api/relay. The relay does not make paid APIs free or remove provider rate limits.");
+  const remember=el("label","chk");const rc=el("input");rc.type="checkbox";rc.checked=state.rememberKeys!==false;
+  rc.onchange=()=>{state.rememberKeys=rc.checked;saveNow();toast(rc.checked?"Keys are remembered on this device":"Keys stay in memory until you reload");};
+  remember.append(rc,document.createTextNode("Remember API keys on this device"));
+  const forget=el("button","danger","Forget all keys");
+  forget.onclick=()=>{if(!confirm("Remove all saved API keys?"))return;state.keys={};state.custom=state.custom.map(c=>Object.assign({},c,{apiKey:""}));refreshRoutes();saveNow();openSettings();};
+  const top=el("div","row-between");top.append(remember,forget);
+  const tmp=inputOf("number",state.temperature,"0 to 2");tmp.step="0.1";tmp.min="0";tmp.max="2";
+  tmp.oninput=()=>{const v=Number(tmp.value);if(isFinite(v)&&v>=0&&v<=2){state.temperature=v;saveSoon();}};
+  const fb=el("label","chk");const fbc=el("input");fbc.type="checkbox";fbc.checked=state.autoFallback!==false;
+  fbc.onchange=()=>{state.autoFallback=fbc.checked;saveSoon();};
+  fb.append(fbc,document.createTextNode("If Agents or Council fails, retry as Single"));
+  const lm=inputOf("text",state.localModel||DEFAULT_LOCAL,DEFAULT_LOCAL);
+  lm.oninput=()=>{state.localModel=lm.value.trim().slice(0,200)||DEFAULT_LOCAL;saveSoon();};
+  const lb=el("button",null,"load local model now");
+  lb.onclick=async()=>{
+    lb.disabled=true;
+    try{await loadLocal(state.localModel,p=>{if(p&&p.status==="progress"&&p.progress!=null)lb.textContent=Math.round(p.progress)+"%";});toast("Local model is ready");}
+    catch(e){toast("Local model failed: "+(e.message||e));}
+    lb.disabled=false;lb.textContent="load local model now";
+  };
+  const lf=el("label","chk");const lfc=el("input");lfc.type="checkbox";lfc.checked=state.localFallback!==false;
+  lfc.onchange=()=>{state.localFallback=lfc.checked;saveSoon();};
+  lf.append(lfc,document.createTextNode("When every cloud route fails, answer with the in-browser model"));
+  body.append(field("System prompt",sys),field("Temperature (0 to 2)",tmp),fb,lf,field("In-browser model (Hugging Face ONNX id)",lm),lb,field("Cloudflare account",cf),el("h4",null,"CORS relay · optional"),field("Your Worker URL",relayUrl),field("Relay secret token",relayToken),relayToggle,relayTest,relayNote,el("h4",null,"API keys"),top);
+  const refs=[...new Set(CATALOG.map(p=>p.keyRef).filter(Boolean))].sort();
+  const providerOf=k=>{const p=CATALOG.find(x=>x.keyRef===k);return p?p.provider:k;};
+  const requiredOf=k=>CATALOG.some(x=>x.keyRef===k&&x.requiresKey);
+  const list=el("div","keylist");
+  for(const k of refs){
+    const row=el("div","keyrow");
+    const head=el("div","keyhead");
+    const stat=el("span","kstat",state.keys[k]?"set":(requiredOf(k)?"required":"optional"));
+    if(state.keys[k])stat.classList.add("set");
+    head.append(el("b",null,providerOf(k)),stat);
+    const inp=inputOf("password",state.keys[k]||"","paste API key");
+    inp.autocomplete="off";inp.spellcheck=false;
+    let timer=null;
+    inp.oninput=()=>{
+      clearTimeout(timer);
+      timer=setTimeout(()=>{
+        state.keys[k]=inp.value.trim().slice(0,400);refreshRoutes();saveSoon();
+        stat.textContent=state.keys[k]?"set":(requiredOf(k)?"required":"optional");
+        stat.className="kstat"+(state.keys[k]?" set":"");
+      },200);
+    };
+    const show=el("button",null,"show");
+    show.onclick=()=>{const hide=inp.type==="password";inp.type=hide?"text":"password";show.textContent=hide?"hide":"show";};
+    const test=el("button",null,"test");
+    test.onclick=()=>{const r=ROUTES.find(x=>x.keyRef===k&&x.enabled)||ROUTES.find(x=>x.keyRef===k);if(!r){toast("No route for this provider");return;}testRoute(r,test);};
+    const line=el("div","keyinp");line.append(inp,show,test);
+    row.append(head,line);list.appendChild(row);
+  }
+  body.appendChild(list);
+  openModal("Settings",body);
+}
+function openRoutes(){
+  const body=el("div");
+  const tbl=el("table");
+  const thead=el("thead");const hr=el("tr");
+  for(const c of ["Route","Status","Score","Avg","OK / Fail","On","Pin","Test",""]) hr.appendChild(el("th",null,c));
+  thead.appendChild(hr);tbl.appendChild(thead);
+  const tb=el("tbody");tbl.appendChild(tb);
+  const paint=()=>{
+    tb.textContent="";
+    for(const r of ROUTES){
+      const s=statOf(r.id);
+      const avg=s.latN?Math.round(s.latSum/s.latN)+" ms":"-";
+      const status=!isEnabled(r)?"off":state.banned.includes(r.id)?"banned":(s.blocked&&s.cool>Date.now())?"blocked (browser)":s.cool>Date.now()?"cooldown":
+        (r.requiresKey&&!keyFor(r))?"needs key":(r.url.includes("{accountId}")&&!state.cloudflareAccountId)?"needs account":"ready";
+      const tr=el("tr");
+      tr.append(el("td","mono",r.label),(()=>{const c=el("td","mono",status);c.title=s.err||"";return c;})(),el("td","mono",String(Math.round(routeScore(r,"general")))),
+        el("td","mono",avg),el("td","mono",s.ok+" / "+s.fail));
+      const en=el("input");en.type="checkbox";en.checked=isEnabled(r);
+      en.onchange=()=>{state.routeOverrides[r.id]=en.checked;saveNow();paint();};
+      const pin=el("button",null,state.pinned.includes(r.id)?"unpin":"pin");
+      pin.onclick=()=>{const i=state.pinned.indexOf(r.id);if(i>=0)state.pinned.splice(i,1);else state.pinned.push(r.id);saveNow();paint();};
+      const test=el("button",null,"test");test.onclick=()=>testRoute(r,test,paint);
+      const td=(n)=>{const c=el("td");c.appendChild(n);return c;};
+      tr.append(td(en),td(pin),td(test));
+      const rm=el("td");
+      if(r.custom){const b=el("button","danger","remove");b.onclick=()=>{state.custom=state.custom.filter(c=>!(c.baseUrl===r.url&&c.models[0][0]===r.model));refreshRoutes();saveNow();paint();};rm.appendChild(b);}
+      tr.appendChild(rm);
+      tb.appendChild(tr);
+    }
+  };
+  paint();
+  const f={p:inputOf("text","","Provider name"),u:inputOf("url","","https://host/v1/chat/completions"),m:inputOf("text","","model id"),k:inputOf("password","","API key (optional)")};
+  const add=el("button","primary","Add route");
+  add.onclick=()=>{
+    const rawUrl=f.u.value.trim();
+    if(!rawUrl||!f.m.value.trim()){toast("URL and model are required");return;}
+    let parsed;
+    try{parsed=new URL(rawUrl);}catch(e){toast("Enter a valid HTTPS API URL");return;}
+    if(parsed.protocol!=="https:"||!parsed.hostname||parsed.username||parsed.password){toast("Custom routes must use HTTPS and cannot contain embedded credentials");return;}
+    if(!/\/v1\//i.test(parsed.pathname)&&!parsed.pathname.endsWith("/chat/completions")){toast("Check the endpoint path; an OpenAI-compatible chat-completions URL is recommended");return;}
+    state.custom.push({provider:f.p.value.trim()||"Custom",baseUrl:parsed.href,models:[[f.m.value.trim(),false,false]],
+      apiKey:f.k.value.trim(),requiresKey:false,timeout:30,custom:true});
+    refreshRoutes();saveNow();paint();toast("Secure route added");
+  };
+  const reset=el("button",null,"Reset route health");
+  reset.onclick=()=>{state.stats={};state.banned=[];saveNow();toast("Route health reset");openRoutes();};
+  const testAll=el("button","primary","Test all routes");
+  testAll.onclick=async()=>{
+    const list=ROUTES.filter(r=>isEnabled(r)&&(!r.requiresKey||keyFor(r))&&(!r.url.includes("{accountId}")||state.cloudflareAccountId));
+    toast("Testing "+list.length+" routes");let i=0;
+    const worker=async()=>{while(i<list.length){const r=list[i++];await testQuiet(r);paint();}};
+    await Promise.all([worker(),worker(),worker(),worker()]);
+    paint();toast("Route test finished");
+  };
+  body.append(tbl,reset,testAll,el("h4",null,"Add a custom OpenAI-compatible route"));
+  const g=el("div","grid2");g.append(field("Provider",f.p),field("Model",f.m),field("Base URL",f.u),field("API key",f.k));
+  body.append(g,add);
+  openModal("Routes",body);
+}
+async function testRoute(r,btn,done){
+  btn.disabled=true;btn.textContent="...";
+  const ctl=new AbortController();const t0=Date.now();
+  try{
+    let text="";
+    for await(const ev of streamRoute(r,[{role:"user",content:"Reply with the single word OK."}],ctl.signal,{maxTokens:8})){if(ev.type==="delta")text+=ev.text;}
+    toast(r.label+" replied \""+text.trim().slice(0,24)+"\" in "+(Date.now()-t0)+" ms");
+  }catch(e){toast(r.label+": "+(e.message||e));}
+  btn.disabled=false;btn.textContent="test";
+  if(done)done();
+}
+
+async function testQuiet(r){
+  const ctl=new AbortController();const t0=Date.now();
+  try{
+    let text="";
+    for await(const ev of streamRoute(r,[{role:"user",content:"Reply with the single word OK."}],ctl.signal,{maxTokens:8,idleMs:20000,totalMs:30000})){if(ev.type==="delta")text+=ev.text;}
+    return {ok:true,ms:Date.now()-t0,text:text.trim().slice(0,24)};
+  }catch(e){return {ok:false,error:String(e.message||e)};}
+}
+
+/* ---------- command palette ---------- */
+function setMode(m){if(!["auto","agents","council","single","image","video","deep","local"].includes(m)){toast("Unknown mode");return;}state.mode=m;syncModes();saveSoon();setStatus("Mode · "+(MODE_NAME[m]||m),"");}
+function clearChat(){
+  const c=activeChat();if(!c)return;
+  if(runtime.busy){toast("Stop the response first");return;}
+  if(!confirm("Clear this chat?"))return;
+  c.messages=[];c.title="New chat";saveSoon();renderAll();
+}
+function exportChat(){
+  const c=activeChat();if(!c)return;
+  const md="# "+c.title+"\n\n"+c.messages.map(m=>"## "+(m.role==="user"?"User":m.role==="error"?"Error":"Assistant"+(m.provider?" · "+m.provider:""))+"\n\n"+(m.content||"")).join("\n\n");
+  downloadText(md,"ztc-chat-"+new Date().toISOString().slice(0,10)+".md");
+}
+function exportWorkspace(){
+  const obj=JSON.parse(JSON.stringify(state));
+  obj.keys={};obj.proxyToken="";obj.proxyEnabled=false;obj.custom=(obj.custom||[]).map(c=>Object.assign({},c,{apiKey:""}));
+  downloadText(JSON.stringify(obj,null,2),"ztc-workspace-"+new Date().toISOString().slice(0,10)+".json");
+}
+const ACTIONS=[
+  {k:"New chat",run:()=>$("newChat").click()},
+  {k:"New project",run:()=>$("newProject").click()},
+  {k:"Mode: Auto (hedged race)",run:()=>setMode("auto")},
+  {k:"Mode: Agents (plan, build, review, verify)",run:()=>setMode("agents")},
+  {k:"Mode: Council (parallel drafts)",run:()=>setMode("council")},
+  {k:"Mode: Single",run:()=>setMode("single")},
+  {k:"Mode: Image generation",run:()=>setMode("image")},
+  {k:"Mode: Video prompt pack",run:()=>setMode("video")},
+  {k:"Mode: Deep search",run:()=>setMode("deep")},
+  {k:"Mode: Local model (in-browser, no key)",run:()=>setMode("local")},
+  {k:"Template: review this code for bugs",run:()=>insertTpl("Review the code below for bugs, edge cases and security issues. List each issue with a fix.\n\n")},
+  {k:"Template: explain step by step",run:()=>insertTpl("Explain this step by step, in plain words, with a short example:\n\n")},
+  {k:"Template: write tests for",run:()=>insertTpl("Write unit tests for the code below. Cover normal input, edge cases and errors.\n\n")},
+  {k:"Toggle web research",run:()=>{state.search=!state.search;syncModes();saveSoon();}},
+  {k:"Toggle verifier",run:()=>{state.verify=!state.verify;syncModes();saveSoon();}},
+  {k:"Routes",run:openRoutes},
+  {k:"Settings",run:openSettings},
+  {k:"Export chat (Markdown)",run:exportChat},
+  {k:"Export workspace (JSON)",run:exportWorkspace},
+  {k:"Import workspace (JSON)",run:()=>$("importFile").click()},
+  {k:"Stop response",run:()=>{if(runtime.ctl)runtime.ctl.abort();}},
+  {k:"Clear this chat",run:clearChat}
+];
+let palSel=0,palItems=[];
+function openPalette(){$("palette").hidden=false;$("palInput").value="";$("palInput").focus();filterPal("");}
+function closePalette(){$("palette").hidden=true;}
+function filterPal(q){q=q.toLowerCase();palItems=ACTIONS.filter(a=>a.k.toLowerCase().includes(q));palSel=0;paintPal();}
+function paintPal(){
+  const list=$("palList");list.textContent="";
+  palItems.forEach((a,i)=>{const it=el("div","pal-item"+(i===palSel?" sel":""),a.k);it.onclick=()=>{closePalette();a.run();};list.appendChild(it);});
+}
+
+/* ---------- files, import, wiring ---------- */
+function importWorkspace(file){
+  file.text().then(t=>{
+    const s=JSON.parse(t);
+    if(!Array.isArray(s.projects))throw new Error("not a ZTC workspace file");
+    state=normalize(s);refreshRoutes();saveNow();renderAll();toast("Workspace imported");
+  }).catch(e=>toast("Import failed: "+e.message));
+}
+async function generateTextFiles(list){
+  if(runtime.pending.length+list.length>LIMITS.maxFiles){toast("Up to "+LIMITS.maxFiles+" files per message");return;}
+  for(const f of list){
+    if(!TEXT_FILE.test(f.name)&&!(f.type||"").startsWith("text/")){toast("Skipped "+f.name+": text and code files only");continue;}
+    if(f.size>LIMITS.maxFileBytes){toast("Skipped "+f.name+": over 600 KB");continue;}
+    runtime.pending.push({name:sanitizeText(f.name,120),text:sanitizeText(await f.text(),150000)});
+  }
+  renderFiles();
+}
+$("sendBtn").onclick=sendFromInput;
+$("stopBtn").onclick=()=>{if(runtime.ctl)runtime.ctl.abort();};
+$("input").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();sendFromInput();}});
+$("input").addEventListener("input",autosize);
+$("attachBtn").onclick=()=>$("file").click();
+$("file").onchange=e=>{generateTextFiles([...e.target.files]);e.target.value="";};
+$("importFile").onchange=e=>{if(e.target.files[0])importWorkspace(e.target.files[0]);e.target.value="";};
+$("newProject").onclick=()=>{
+  const name=prompt("Project name","Project "+(state.projects.length+1));if(!name)return;
+  const p=newProject(name.trim());p.chats.push(newChat());state.projects.push(p);
+  state.activeProject=p.id;state.activeChat=p.chats[0].id;saveSoon();renderAll();
+};
+$("newChat").onclick=()=>{
+  if(runtime.busy)return;
+  const p=activeProject();if(!p)return;
+  const c=newChat();p.chats.unshift(c);state.activeChat=c.id;saveSoon();renderAll();
+};
+$("filter").oninput=()=>renderSidebar();
+$("openRoutes").onclick=openRoutes;
+$("menuBtn").onclick=()=>$("side").classList.toggle("open");
+$("openSettings").onclick=openSettings;
+$("palBtn").onclick=openPalette;
+$("modes").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setMode(b.dataset.mode);});
+$("speed").onchange=e=>{state.speed=e.target.value;saveSoon();};
+$("togSearch").onchange=e=>{state.search=e.target.checked;saveSoon();};
+$("togVerify").onchange=e=>{state.verify=e.target.checked;saveSoon();};
+$("overlay").addEventListener("mousedown",e=>{if(e.target.id==="overlay")closeModal();});
+$("palette").addEventListener("mousedown",e=>{if(e.target.id==="palette")closePalette();});
+$("palInput").oninput=e=>filterPal(e.target.value);
+$("palInput").onkeydown=e=>{
+  if(e.key==="ArrowDown"){palSel=Math.min(palSel+1,palItems.length-1);paintPal();e.preventDefault();}
+  else if(e.key==="ArrowUp"){palSel=Math.max(palSel-1,0);paintPal();e.preventDefault();}
+  else if(e.key==="Enter"){const a=palItems[palSel];closePalette();if(a)a.run();}
+  else if(e.key==="Escape")closePalette();
+};
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openPalette();}
+  else if(e.key==="Escape"){if(!$("palette").hidden)closePalette();else if(!$("overlay").hidden)closeModal();}
+});
+
+buildDropdown($("speed"));
+try{if((navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=4)||(navigator.connection&&navigator.connection.saveData)||window.matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("low-power");}catch(e){}
+window.addEventListener("online",()=>{if(!runtime.busy)setStatus("Online · ready","ok");});
+window.addEventListener("offline",()=>{if(!runtime.busy)setStatus("Offline · cloud APIs unavailable","bad");});
+refreshRoutes();
+renderAll();
+renderFiles();
+setStatus("Ready","");
+autosize();
+document.addEventListener("keydown",e=>{
+  if(e.altKey&&/^[1-4]$/.test(e.key)){e.preventDefault();setMode(["auto","agents","council","single"][Number(e.key)-1]);}
+});
+</script>
+</body>
+</html>
